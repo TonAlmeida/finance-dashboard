@@ -4,7 +4,7 @@ import Chart from "@/components/chart";
 import Transactions from "@/components/transactions";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BadgeDollarSign, DollarSign, Percent, Users } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProcessedData } from "@/types/processedData";
 import { formatValue } from "@/utils/formatValue"
 
@@ -12,6 +12,24 @@ export default function app() {
 
   const [processedData, setProcessedData] = useState<ProcessedData | null>(null);
   const [error, setError] = useState<string>('');
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("data");
+    if (storedData) {
+      try {
+        setProcessedData(JSON.parse(storedData));
+      } catch (e) {
+        console.error("Erro ao parsear o localStorage", e);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+  if (processedData) {
+    localStorage.setItem('data', JSON.stringify(processedData));
+    console.log("Dados salvos:", processedData);
+  }
+}, [processedData])
 
   const handleDataProcessed = (data: ProcessedData) => {
     setProcessedData(data);
@@ -25,7 +43,7 @@ export default function app() {
 
   return (
     <main className="sm:ml-14 p-4">
-      <div className="hidden sm:flex w-full">
+      <div className="flex w-full">
         <Header
           onDataProcessed={handleDataProcessed}
           onError={handleError}

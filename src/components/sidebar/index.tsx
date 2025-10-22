@@ -11,14 +11,12 @@ import { TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react
 import { Tooltip } from "../ui/tooltip";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import Header from "../header";
 
 export default function Sidebar() {
 
     const pathName = usePathname().slice(1);
     const [ selected, setSelected ] = useState('');
     useEffect(() => {
-        console.log(pathName)
         pathName ? setSelected(pathName) : setSelected("home")
     }, [pathName])
 
@@ -167,7 +165,7 @@ export default function Sidebar() {
                             </nav>
                         </SheetContent>
                     </Sheet>
-                    <Header />
+                    <h1 className="text-xl">Risoflora Finance</h1>
                 </header>
             </div>
         </div>
