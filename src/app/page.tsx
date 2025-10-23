@@ -117,7 +117,9 @@ export default function app() {
 
       <section className="mt-4 flex flex-col md:flex-row gap-4">
         <Chart data={processedData?.chartData} />
-        <Transactions data={processedData?.transactions}/>
+        <div className="container max-h-[600px] overflow-scroll">
+          <Transactions data={processedData?.transactions}/>
+        </div>
       </section>
     </main>
   )

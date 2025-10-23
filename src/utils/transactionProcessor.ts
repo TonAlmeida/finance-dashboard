@@ -1,133 +1,117 @@
-// utils/transactionProcessor.ts
-import { Transaction, CSVRow } from '@/types/transaction';
+import { Transaction } from "@/types/transaction";
 
-export function processCSVToTransactions(csvFiles: string[]): Transaction[] {
-  const transactions: Transaction[] = [];
-  
-  csvFiles.forEach((file: string) => {
-    const lines = file.split('\n');
+export function processTransactions(rawTransactions: any[]): Transaction[] {
+  return rawTransactions.map((tx, index) => {
+    const amount = Number(tx.Valor) || 0;
+    const description = tx.Descrição || '';
     
-    // Pular linha de cabeçalho e processar cada linha
-    for (let i = 1; i < lines.length; i++) {
-      if (lines[i].trim() === '') continue;
-      
-      const values = parseCSVLine(lines[i]);
-      if (values.length < 4) continue;
-      
-      try {
-        const transaction = createTransactionFromRow(values);
-        if (transaction) {
-          transactions.push(transaction);
-        }
-      } catch (error) {
-        console.warn('Erro ao processar linha:', lines[i], error);
-      }
-    }
+    // Extrair informações da descrição
+    const { category, transferType, counterpartName, document } = extractTransactionInfo(description);
+    
+    return {
+      id: tx.Identificador || `tx-${index}-${Date.now()}`,
+      date: tx.Data || new Date().toISOString().split('T')[0],
+      amount,
+      description,
+      type: amount >= 0 ? 'income' : 'expense',
+      category,
+      transferType,
+      counterpartName,
+      document,
+      bank: extractBankFromDescription(description),
+      identifier: tx.Identificador
+    };
   });
-  
-  // Ordenar por data (mais recente primeiro)
-  return transactions.sort((a, b) => 
-    new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
 }
 
-// Função para parsear linha CSV considerando vírgulas na descrição
-function parseCSVLine(line: string): string[] {
-  const result: string[] = [];
-  let current = '';
-  let inQuotes = false;
+function extractTransactionInfo(description: string): {
+  category: string;
+  transferType?: string;
+  counterpartName?: string;
+  document?: string;
+} {
+  const parts = description.split(" - ").map(p => p.trim());
   
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i];
-    
-    if (char === '"') {
-      inQuotes = !inQuotes;
-    } else if (char === ',' && !inQuotes) {
-      result.push(current.trim());
-      current = '';
-    } else {
-      current += char;
-    }
+  let category = "Outros";
+  let transferType: string | undefined;
+  let counterpartName: string | undefined;
+  let document: string | undefined;
+
+  // Determinar tipo de transação
+  if (description.includes("Transferência enviada pelo Pix")) {
+    transferType = "PIX Enviado";
+    category = "Transferência";
+  } else if (description.includes("Transferência Recebida") || description.includes("Transferência recebida pelo Pix")) {
+    transferType = "PIX Recebido";
+    category = "Transferência";
+  } else if (description.includes("Compra no débito")) {
+    transferType = "Débito";
+    category = categorizeByBusiness(parts[1] || "");
+  } else if (description.includes("Pagamento Recebido")) {
+    transferType = "Recebimento";
+    category = "Receita";
+  } else if (description.includes("Pagamento de fatura")) {
+    transferType = "Fatura";
+    category = "Serviços Financeiros";
+  } else if (description.includes("Tarifa")) {
+    transferType = "Tarifa";
+    category = "Serviços Financeiros";
   }
-  
-  // Adicionar o último campo
-  result.push(current.trim());
-  return result;
+
+  // Extrair nome e documento
+  if (parts.length >= 3) {
+    counterpartName = parts[1];
+    document = parts[2].replace(/[^\d.-]/g, "").trim();
+  } else if (parts.length >= 2) {
+    counterpartName = parts[1];
+  }
+
+  // Limpeza do nome
+  if (counterpartName) {
+    counterpartName = counterpartName.replace(/•{3}\.\d{3}\.\d{3}-•{2}/g, "")
+                                     .replace(/•{2}\.\d{3}\.\d{3}\/\d{4}-•{2}/g, "")
+                                     .replace(/\s+/g, " ")
+                                     .trim();
+  }
+
+  // Se não categorizou ainda, categoriza por negócio
+  if (category === "Outros" && counterpartName) {
+    category = categorizeByBusiness(counterpartName, description);
+  }
+
+  return { category, transferType, counterpartName, document };
 }
 
-// Função para criar transação a partir de uma linha
-function createTransactionFromRow(values: string[]): Transaction | null {
-  const [data, valor, identificador, descricao] = values;
+function categorizeByBusiness(name: string, description: string = ""): string {
+  const lowerName = name.toLowerCase();
+  const lowerDesc = description.toLowerCase();
+
+  if (lowerName.includes('panificadora') || lowerName.includes('padaria') || lowerDesc.includes('aliment')) 
+    return "Alimentação";
+  if (lowerName.includes('tabacaria') || lowerName.includes('tabaco')) 
+    return "Tabacaria";
+  if (lowerName.includes('escola') || lowerName.includes('educação') || lowerName.includes('material escolar')) 
+    return "Educação";
+  if (lowerName.includes('farmacia') || lowerName.includes('farmácia') || lowerName.includes('drogaria')) 
+    return "Saúde";
+  if (lowerName.includes('posto') || lowerName.includes('combustível')) 
+    return "Combustível";
+  if (lowerName.includes('supermercado') || lowerName.includes('mercado') || lowerName.includes('atacadão')) 
+    return "Mercado";
+  if (lowerName.includes('restaurante') || lowerName.includes('lanchonete') || lowerName.includes('bar')) 
+    return "Alimentação Externa";
   
-  const amount = parseFloat(valor.trim());
-  if (isNaN(amount)) return null;
-  
-  const type: 'income' | 'expense' = amount > 0 ? 'income' : 'expense';
-  const category = categorizeTransaction(descricao.trim());
-  
-  return {
-    date: formatDate(data.trim()),
-    amount: Math.abs(amount), // Valor absoluto para facilitar
-    id: identificador.trim(),
-    description: descricao.trim(),
-    type,
-    category
-  };
+  return "Outros";
 }
 
-// Função para categorizar transações baseada na descrição
-function categorizeTransaction(description: string): string {
-  const desc = description.toLowerCase();
-  
-  if (desc.includes('transferência enviada')) return 'transfer_out';
-  if (desc.includes('reembolso')) return 'refund';
-  if (desc.includes('compra no débito')) return 'purchase';
-  if (desc.includes('supermercado') || desc.includes('mercado')) return 'groceries';
-  if (desc.includes('padaria') || desc.includes('panificadora')) return 'bakery';
-  if (desc.includes('restaurante') || desc.includes('lanchonete') || desc.includes('acaiteria')) return 'food';
-  if (desc.includes('farmácia') || desc.includes('farmacia') || desc.includes('utifarma')) return 'pharmacy';
-  if (desc.includes('transporte') || desc.includes('uber') || desc.includes('taxi')) return 'transport';
-  if (desc.includes('luz') || desc.includes('água') || desc.includes('agua') || desc.includes('energia')) return 'utilities';
-  
-  return 'other';
-}
-
-// Função para formatar data (DD/MM/YYYY para YYYY-MM-DD)
-function formatDate(dateString: string): string {
-  const [day, month, year] = dateString.split('/');
-  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
-}
-
-// Função para ler arquivos (já existente)
-export function readFilesAsText(files: File[]): Promise<string[]> {
-  return new Promise((resolve, reject) => {
-    const csvFiles: string[] = [];
-    let filesProcessed = 0;
-    
-    if (files.length === 0) {
-      resolve([]);
-      return;
-    }
-    
-    for (let i = 0; i < files.length; i++) {
-      const reader = new FileReader();
-      
-      reader.onload = function(e: ProgressEvent<FileReader>) {
-        if (e.target?.result) {
-          csvFiles.push(e.target.result as string);
-          filesProcessed++;
-          
-          if (filesProcessed === files.length) {
-            resolve(csvFiles);
-          }
-        }
-      };
-      
-      reader.onerror = function() {
-        reject(new Error(`Erro ao ler o arquivo: ${files[i].name}`));
-      };
-      
-      reader.readAsText(files[i]);
-    }
-  });
+function extractBankFromDescription(description: string): string {
+  if (description.includes("NU PAGAMENTOS") || description.includes("Nubank")) return "Nubank";
+  if (description.includes("BCO BRADESCO")) return "Bradesco";
+  if (description.includes("BCO SANTANDER")) return "Santander";
+  if (description.includes("BCO DO BRASIL")) return "Banco do Brasil";
+  if (description.includes("CAIXA ECONOMICA")) return "Caixa";
+  if (description.includes("ITAU")) return "Itaú";
+  if (description.includes("MERCADO PAGO")) return "Mercado Pago";
+  if (description.includes("PICPAY")) return "PicPay";
+  return "Outro";
 }

@@ -5,5 +5,8 @@ export interface Client {
   date: Date;
   transactions: number;
   balance: number;
+  document: string | undefined;
+  category: string;
+  transferType: string | undefined;
 }
 

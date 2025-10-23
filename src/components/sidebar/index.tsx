@@ -6,7 +6,7 @@ import { Sheet,
         SheetContent,
         SheetTitle
  } from "../ui/sheet";
-import { Home, LogOut, Package, PanelBottom, Settings, ShoppingBag, Users } from "lucide-react";
+import { DollarSignIcon, Home, HomeIcon, LogOut, Package, PanelBottom, Settings, ShoppingBag, Users } from "lucide-react";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Tooltip } from "../ui/tooltip";
 import { useEffect, useState } from "react";
@@ -20,9 +20,9 @@ export default function Sidebar() {
         pathName ? setSelected(pathName) : setSelected("home")
     }, [pathName])
 
-    function sel(event) {
+    function sel(event: React.MouseEvent<HTMLAnchorElement>) {
         const menuId = event.currentTarget.dataset.menuId;
-        setSelected(menuId);
+        menuId && setSelected(menuId);
     }
 
     return (
@@ -49,25 +49,13 @@ export default function Sidebar() {
 
                         <Tooltip>
                             <TooltipTrigger>
-                                <Link onClick={sel} data-menu-id="orders" href="/orders" className={`${selected === 'orders' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
-                                    <ShoppingBag className="h-5 w-5" />
-                                    <span className="sr-only">pedidos</span>
+                                <Link onClick={sel} data-menu-id="transactions" href="/transactions"className={`${selected === 'transactions' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
+                                    <DollarSignIcon className="h-5 w-5" />
+                                    <span className="sr-only">lista de trnsações</span>
                                 </Link>
                             </TooltipTrigger>
                             <TooltipContent side="right" >
-                                <p className="px-3 border rounded-sm bg-white">pedidos</p>
-                            </TooltipContent>
-                        </Tooltip>
-
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Link onClick={sel} data-menu-id="products" href="/products" className={`${selected === 'products' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
-                                    <Package className="h-5 w-5" />
-                                    <span className="sr-only">produtos</span>
-                                </Link>
-                            </TooltipTrigger>
-                            <TooltipContent side="right" >
-                                <p className="px-3 border rounded-sm bg-white">produtos</p>
+                                <p className="px-3 border rounded-sm bg-white">transações</p>
                             </TooltipContent>
                         </Tooltip>
 
@@ -80,18 +68,6 @@ export default function Sidebar() {
                             </TooltipTrigger>
                             <TooltipContent side="right" >
                                 <p className="px-3 border rounded-sm bg-white">contrapartes</p>
-                            </TooltipContent>
-                        </Tooltip>
-
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <Link onClick={sel} data-menu-id="config" href="/config"className={`${selected === 'config' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
-                                    <Settings className="h-5 w-5" />
-                                    <span className="sr-only">configurações</span>
-                                </Link>
-                            </TooltipTrigger>
-                            <TooltipContent side="right" >
-                                <p className="px-3 border rounded-sm bg-white">configurações</p>
                             </TooltipContent>
                         </Tooltip>
 
@@ -137,25 +113,16 @@ export default function Sidebar() {
                                     <span>início</span>
                                 </Link>
 
-                                <Link onClick={sel} data-menu-id="orders" href="/orders" className={`${selected === 'orders' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
-                                    <ShoppingBag className="h-5 w-5 transition-all"/>
-                                    <span>pedidos</span>
+                                <Link onClick={sel} data-menu-id="transactions" href="/transactions" className={`${selected === 'transactions' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
+                                    <DollarSignIcon className="h-5 w-5 transition-all"/>
+                                    <span>transactions</span>
                                 </Link>
-
-                                <Link onClick={sel} data-menu-id="products" href="/products" className={`${selected === 'products' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
-                                    <Package className="h-5 w-5 transition-all"/>
-                                    <span>produtos</span>
-                                </Link>
-
+                        
                                 <Link onClick={sel} data-menu-id="clients" href="/clients" className={`${selected === 'clients' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
                                     <Users className="h-5 w-5 transition-all"/>
                                     <span>contrapartes</span>
                                 </Link>
 
-                                <Link onClick={sel} data-menu-id="config" href="/config" className={`${selected === 'config' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
-                                    <Settings className="h-5 w-5 transition-all"/>
-                                    <span>configurações</span>
-                                </Link>
                             </nav>
                             <nav className="mt-auto mb-5 grid gap-6 text-lg font-medium">
                                 <Link href='#' className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
