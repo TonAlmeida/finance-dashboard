@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { Transaction } from "@/types/transaction";
 import { Search, Filter } from "lucide-react";
+import { formatValue } from "@/utils/formatValue";
 
 interface TransactionsProps {
   data?: Transaction[]; // Pode ser undefined inicialmente
@@ -104,7 +105,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                 <td className="p-2">{t.description}</td>
                 <td className="p-2">{t.category}</td>
                 <td className={`p-2 text-right font-medium ${t.type === "income" ? "text-green-600" : "text-red-600"}`}>
-                  {t.type === "income" ? "+" : "-"} R$ {t.amount.toFixed(2)}
+                  {formatValue(t.amount)}
                 </td>
               </tr>
             ))}

@@ -75,11 +75,11 @@ export default function Sidebar() {
                             <TooltipTrigger>
                                 <Link onClick={sel} data-menu-id="clients" href="/clients"className={`${selected === 'clients' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
                                     <Users className="h-5 w-5" />
-                                    <span className="sr-only">clientes</span>
+                                    <span className="sr-only">contrapartes</span>
                                 </Link>
                             </TooltipTrigger>
                             <TooltipContent side="right" >
-                                <p className="px-3 border rounded-sm bg-white">clientes</p>
+                                <p className="px-3 border rounded-sm bg-white">contrapartes</p>
                             </TooltipContent>
                         </Tooltip>
 
@@ -149,7 +149,7 @@ export default function Sidebar() {
 
                                 <Link onClick={sel} data-menu-id="clients" href="/clients" className={`${selected === 'clients' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
                                     <Users className="h-5 w-5 transition-all"/>
-                                    <span>clientes</span>
+                                    <span>contrapartes</span>
                                 </Link>
 
                                 <Link onClick={sel} data-menu-id="config" href="/config" className={`${selected === 'config' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>

@@ -89,7 +89,7 @@ export default function app() {
               <Users className="ml-auto w-4 h-4" />
             </div>
             <CardDescription>
-              quanto entrou na conta
+              quanto entrou
             </CardDescription>
           </CardHeader>
 
@@ -105,7 +105,7 @@ export default function app() {
               <Percent className="ml-auto w-4 h-4" />
             </div>
             <CardDescription>
-              quanto saíu da conta
+              quanto saíu
             </CardDescription>
           </CardHeader>
 
