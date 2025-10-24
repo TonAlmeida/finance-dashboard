@@ -202,7 +202,7 @@ export function generateClients(transactions: Transaction[]): Client[] {
       document : 
       `${name.toLowerCase().replace(/\s+/g, "_")}_${category}`;
 
-    let delta = t.amount;
+    const delta = t.amount;
 
     if (clientsMap.has(key)) {
       const existing = clientsMap.get(key)!;
