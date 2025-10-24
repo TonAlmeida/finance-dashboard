@@ -20,8 +20,8 @@ export default function Chart({ data = [] }: ChartProps) {
   return (
     <Card className="w-full max-w-[600px] sm:w-1/2">
       <CardHeader>
-        <CardTitle>Area Chart - Legend</CardTitle>
-        <CardDescription>Showing total visitors for the last 6 months</CardDescription>
+        <CardTitle>Gráfico de barras (Entradas/Saídas)</CardTitle>
+        <CardDescription>comparativo de entradas/saídas por mês</CardDescription>
       </CardHeader>
       <CardContent>
       <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
@@ -41,18 +41,6 @@ export default function Chart({ data = [] }: ChartProps) {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 leading-none font-medium">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="text-muted-foreground flex items-center gap-2 leading-none">
-              January - June 2024
-            </div>
-          </div>
-        </div>
-      </CardFooter>
     </Card>
   );
 }

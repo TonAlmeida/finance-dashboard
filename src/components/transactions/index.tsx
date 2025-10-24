@@ -214,9 +214,9 @@ export default function Transactions({ data = [] }: TransactionsProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="border-b text-left text-gray-600 bg-gray-50">
+            <tr className="border-b text-left bg-gray-600 text-gray-50">
               <th 
-                className="p-2 font-semibold cursor-pointer hover:bg-gray-100 transition-colors"
+                className="p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors"
                 onClick={() => handleSort('date')}
               >
                 <div className="flex items-center gap-1">
@@ -225,7 +225,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                 </div>
               </th>
               <th 
-                className="p-2 font-semibold cursor-pointer hover:bg-gray-100 transition-colors"
+                className="p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors"
                 onClick={() => handleSort('description')}
               >
                 <div className="flex items-center gap-1">
@@ -234,7 +234,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                 </div>
               </th>
               <th 
-                className="p-2 font-semibold cursor-pointer hover:bg-gray-100 transition-colors"
+                className="p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors"
                 onClick={() => handleSort('category')}
               >
                 <div className="flex items-center gap-1">
@@ -242,9 +242,9 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                   {getSortIcon('category')}
                 </div>
               </th>
-              <th className="p-2 font-semibold">Tipo</th>
+              <th className="p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors">Tipo</th>
               <th 
-                className="p-2 font-semibold text-right cursor-pointer hover:bg-gray-100 transition-colors"
+                className="p-2 font-semibold text-right cursor-pointer hover:bg-gray-400 transition-colors"
                 onClick={() => handleSort('amount')}
               >
                 <div className="flex items-center justify-end gap-1">
@@ -304,7 +304,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
       </div>
 
       {sortedTransactions.length > 0 && (
-        <div className="mt-4 pt-3 border-t text-sm text-gray-600">
+        <div className="mt-4 pt-3 border-t text-sm bg-gray-300 p-2 rounded-md">
           <div className="flex justify-between">
             <span>Receitas: <span className="text-green-600 font-medium">{formatValue(stats.income)}</span></span>
             <span>Despesas: <span className="text-red-600 font-medium">{formatValue(stats.expense)}</span></span>

@@ -76,10 +76,10 @@ export default function TransactionsPieChart({
     <Card className="w-full max-w-[900px] sm:w-1/2">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-semibold">
-          Distribuição de Categorias
+          Gráfico de pizza (Categorias)
         </CardTitle>
         <CardDescription className="text-xs">
-          Fatias destacadas para visualização
+          cada fatia representa uma categoria registrada
         </CardDescription>
       </CardHeader>
 
