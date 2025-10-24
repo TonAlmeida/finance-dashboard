@@ -10,7 +10,7 @@ import FileUpload from "@/components/FileUpload";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 
-export default function app() {
+export default function App() {
 
   const [processedData, setProcessedData] = useState<ProcessedData | null>(null);
     const [error, setError] = useState<string>('');

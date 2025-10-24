@@ -21,12 +21,10 @@ export default function Transactions({ data = [] }: TransactionsProps) {
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
-  // Extrair categorias únicas
   const categories = useMemo(() => {
     return Array.from(new Set(data.map((t) => t.category).filter(Boolean))).sort();
   }, [data]);
 
-  // Filtrar transações
   const filteredTransactions = useMemo(() => {
     return data.filter((t) => {
       const matchesType = typeFilter === "all" || t.type === typeFilter;
@@ -36,7 +34,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
         (t.counterpartName && t.counterpartName.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (t.document && t.document.includes(searchTerm));
 
-      // Filtro de data
+      
       if (dateRange.start || dateRange.end) {
         const transactionDate = new Date(t.date);
         const start = dateRange.start ? new Date(dateRange.start) : null;
@@ -54,7 +52,6 @@ export default function Transactions({ data = [] }: TransactionsProps) {
     });
   }, [data, typeFilter, categoryFilter, searchTerm, dateRange]);
 
-  // Ordenar transações
   const sortedTransactions = useMemo(() => {
     return [...filteredTransactions].sort((a, b) => {
       let aValue: any, bValue: any;
@@ -86,7 +83,6 @@ export default function Transactions({ data = [] }: TransactionsProps) {
     });
   }, [filteredTransactions, sortField, sortDirection]);
 
-  // Estatísticas rápidas
   const stats = useMemo(() => {
     const income = filteredTransactions
       .filter(t => t.type === 'income')
@@ -153,7 +149,6 @@ export default function Transactions({ data = [] }: TransactionsProps) {
           </p>
         </div>
 
-        {/* Filtros */}
         <div className="flex flex-wrap gap-2">
           <select
             value={typeFilter}
@@ -200,7 +195,6 @@ export default function Transactions({ data = [] }: TransactionsProps) {
             />
           </div>
 
-          {/* Botão para limpar filtros */}
           {(typeFilter !== "all" || categoryFilter !== "all" || searchTerm || dateRange.start || dateRange.end) && (
             <button
               onClick={() => {
@@ -217,7 +211,6 @@ export default function Transactions({ data = [] }: TransactionsProps) {
         </div>
       </div>
 
-      {/* Tabela de transações */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
           <thead>
@@ -310,7 +303,6 @@ export default function Transactions({ data = [] }: TransactionsProps) {
         </table>
       </div>
 
-      {/* Footer com resumo */}
       {sortedTransactions.length > 0 && (
         <div className="mt-4 pt-3 border-t text-sm text-gray-600">
           <div className="flex justify-between">
