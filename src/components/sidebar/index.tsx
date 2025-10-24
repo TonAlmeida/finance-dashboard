@@ -6,7 +6,7 @@ import { Sheet,
         SheetContent,
         SheetTitle
  } from "../ui/sheet";
-import { DollarSignIcon, Home, HomeIcon, LogOut, Package, PanelBottom, Settings, ShoppingBag, Users } from "lucide-react";
+import { DollarSignIcon, Home, HomeIcon, ImportIcon, LogOut, Package, PanelBottom, Settings, ShoppingBag, Users } from "lucide-react";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Tooltip } from "../ui/tooltip";
 import { useEffect, useState } from "react";
@@ -55,7 +55,7 @@ export default function Sidebar() {
                                 </Link>
                             </TooltipTrigger>
                             <TooltipContent side="right" >
-                                <p className="px-3 border rounded-sm bg-white">transações</p>
+                                <p className="px-3 border rounded-sm bg-white">lista de trnsações</p>
                             </TooltipContent>
                         </Tooltip>
 
@@ -115,7 +115,7 @@ export default function Sidebar() {
 
                                 <Link onClick={sel} data-menu-id="transactions" href="/transactions" className={`${selected === 'transactions' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
                                     <DollarSignIcon className="h-5 w-5 transition-all"/>
-                                    <span>transactions</span>
+                                    <span>transações</span>
                                 </Link>
                         
                                 <Link onClick={sel} data-menu-id="clients" href="/clients" className={`${selected === 'clients' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>

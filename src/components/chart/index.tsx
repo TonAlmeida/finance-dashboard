@@ -16,7 +16,7 @@ const chartConfig = {
   expenses: { label: "expenses", color: "#F44336"},
 } satisfies ChartConfig;
 
-export default function ChartAreaLegend({ data = [] }: ChartProps) {
+export default function Chart({ data = [] }: ChartProps) {
   return (
     <Card className="w-full max-w-[600px] sm:w-1/2">
       <CardHeader>

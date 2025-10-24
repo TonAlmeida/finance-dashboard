@@ -31,8 +31,7 @@ export default function FileUpload({ onDataProcessed, onError }: FileUploadProps
   };
 
   return (
-    <div className="flex justify-between items-center py-2 px-4 w-full">
-      <h1 className='hidden sm:flex sm:text-2xl'>Risoflora Finance</h1>
+    <div className="flex justify-end items-center">
       <input
         id='mainInput'
         type="file"
@@ -41,7 +40,7 @@ export default function FileUpload({ onDataProcessed, onError }: FileUploadProps
         onChange={handleFileChange}
         disabled={isProcessing}
         style={{ appearance: 'none' }}
-        className="text-sm text-gray-500 file:mr-0 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+        className="text-sm p-3 text-gray-500 file:mr-0 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
       />
       {isProcessing && (
         <p className="mt-2 text-sm text-gray-600">Processando arquivos...</p>

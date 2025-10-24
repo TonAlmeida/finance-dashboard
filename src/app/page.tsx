@@ -1,53 +1,54 @@
 "use client"
-import Header from "@/components/header";
 import Chart from "@/components/chart";
-import Transactions from "@/components/transactions";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BadgeDollarSign, DollarSign, Percent, Users } from "lucide-react";
+import { BadgeDollarSign, CheckCircle2Icon, CheckIcon, DollarSign, Percent, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ProcessedData } from "@/types/processedData";
 import { formatValue } from "@/utils/formatValue"
+import  PizzaChart from "@/components/pizzaChart";
+import FileUpload from "@/components/FileUpload";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
 
 export default function app() {
 
   const [processedData, setProcessedData] = useState<ProcessedData | null>(null);
-  const [error, setError] = useState<string>('');
+    const [error, setError] = useState<string>('');
+    const [showAlert, setShowAlert] = useState<boolean>(false);
 
-  useEffect(() => {
+    useEffect(() => {
     const storedData = localStorage.getItem("data");
     if (storedData) {
-      try {
+        try {
         setProcessedData(JSON.parse(storedData));
-      } catch (e) {
+        } catch (e) {
         console.error("Erro ao parsear o localStorage", e);
-      }
+        }
     }
-  }, []);
+    }, []);
 
-  useEffect(() => {
-  if (processedData) {
-    localStorage.setItem('data', JSON.stringify(processedData));
-    console.log("Dados salvos:", processedData);
-  }
-}, [processedData])
-
-  const handleDataProcessed = (data: ProcessedData) => {
-    setProcessedData(data);
-    setError('');
-  };
-
-   const handleError = (errorMessage: string) => {
-    setError(errorMessage);
-    setProcessedData(null);
-  };
+    useEffect(() => {
+      if (processedData) {
+      localStorage.setItem('data', JSON.stringify(processedData));
+      setShowAlert(true);
+      }
+    }, [processedData])
+    
+    const handleDataProcessed = (data: ProcessedData) => {
+      setProcessedData(data);
+      setError('');
+    };
+  
+      const handleError = (errorMessage: string) => {
+      setError(errorMessage);
+      setProcessedData(null);
+    };
 
   return (
     <main className="sm:ml-14 p-4">
       <div className="flex w-full">
-        <Header
-          onDataProcessed={handleDataProcessed}
-          onError={handleError}
-        />
+        <h1 className="p-2 m-2 border-b text-md sm:text-2xl w-full">Risoflora Finance</h1>
+        <FileUpload onDataProcessed={handleDataProcessed} onError={handleError} />
       </div>
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Card>
@@ -62,7 +63,7 @@ export default function app() {
           </CardHeader>
 
           <CardContent>
-            <p className={`text-base sm:text-lg font-bold ${processedData && processedData?.dashboard.balance > 0 ? 'text-green-600' : 'text-red-600'}`}>R$ {formatValue(processedData?.dashboard.balance || 0)}</p>
+            <p className={`text-base sm:text-lg font-bold ${processedData && processedData?.dashboard.balance > 0 ? 'text-green-600' : 'text-red-600'}`}>{formatValue(processedData?.dashboard.balance || 0)}</p>
           </CardContent>
         </Card>
 
@@ -94,7 +95,7 @@ export default function app() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-green-700 sm:text-lg font-bold">R$ {formatValue(processedData?.dashboard.totalIncome || 0)}</p>
+            <p className="text-green-700 sm:text-lg font-bold">{formatValue(processedData?.dashboard.totalIncome || 0)}</p>
           </CardContent>
         </Card>
 
@@ -115,12 +116,30 @@ export default function app() {
         </Card>
       </section>
 
-      <section className="mt-4 flex flex-col md:flex-row gap-4">
+      <section className="mt-4 flex flex-col md:flex-row gap-4 h-96">
         <Chart data={processedData?.chartData} />
-        <div className="container max-h-[600px] overflow-scroll">
-          <Transactions data={processedData?.transactions}/>
-        </div>
+        <PizzaChart transactions={processedData?.transactions} />
       </section>
+
+
+      {showAlert && 
+        <Drawer open={showAlert} onOpenChange={setShowAlert}>
+          <DrawerTrigger></DrawerTrigger>
+          <DrawerContent
+            style={{ transformOrigin: "top center" }}
+          >
+            <DrawerHeader>
+              <DrawerTitle className="flex justify-center items-center"><CheckIcon />Sucesso!</DrawerTitle>
+              <DrawerDescription>Dados carregados corretamente!</DrawerDescription>
+            </DrawerHeader>
+            <DrawerFooter>
+              <DrawerClose>
+                Fechar
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      }
     </main>
   )
 }
