@@ -4,4 +4,6 @@ export interface DashboardData {
   totalExpenses: number;
   transactionCount: number;
   averageTransaction: number;
+  topSpendingCategory: string;
+  categoryBreakdown: object;
 }

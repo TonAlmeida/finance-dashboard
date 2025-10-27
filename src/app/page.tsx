@@ -47,7 +47,7 @@ export default function App() {
   return (
     <main className="sm:ml-14 p-4">
       <div className="flex w-full">
-        <h1 className="p-2 m-2 border-b text-md sm:text-2xl w-full">Risoflora Finance</h1>
+        <h1 className="p-2 m-2 border-b text-md sm:text-2xl w-full">Visualizador de CSVs</h1>
         <FileUpload onDataProcessed={handleDataProcessed} onError={handleError} />
       </div>
       <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">

@@ -1,13 +1,12 @@
 export interface Transaction {
   id: string;
   date: string;
-  amount: number;
   description: string;
-  type: 'income' | 'expense';
-  category: string;
-  transferType?: string;
-  document?: string;
-  counterpartName?: string;
-  bank?: string;
-  identifier?: string;
+  category: string,
+  type: string,
+  amount: number,
+  document: string,
+  counterpartName: string,
+  transactionMethod: string,
+  rawData: string
 }
