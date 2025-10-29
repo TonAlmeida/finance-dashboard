@@ -1,9 +1,9 @@
 
-import { ChartData } from "@/types/chartData";
 import { DashboardData } from "@/types/dashboardData";
 import { NuTransactionData } from "@/types/NuTransactionData";
 import { ProcessedData } from "@/types/processedData";
-import { formatValue } from "./formatValue";
+import { PizzaChartData } from "@/types/pizzaChartData";
+import { BarChartData } from "@/types/barChartData";
 
 export class NuCsvProcessor {
     static processData (files: File[]): Promise<ProcessedData> {
@@ -24,14 +24,16 @@ export class NuCsvProcessor {
                 }
 
                 //gerando ChartData
-                const chartData = this.generateChartData(allTransactions);
+                const barChartData = this.generateBarChartData(allTransactions);
+                const pizzaChartData = this.generatePizzaChartData(allTransactions);
 
                 //gerando dashboardData
                 const dashboard = this.generateDashboardData(allTransactions);
 
                 resolve({
                         dashboard,
-                        chartData,
+                        barChartData,
+                        pizzaChartData,
                         transactions: allTransactions
                 });
             } catch(e) {
@@ -80,7 +82,7 @@ export class NuCsvProcessor {
                 "Transporte": ["uber", "99", "cabify", "onibus", "metrô", "trem"],
                 "Entretenimento": ["cinema", "netflix", "spotify", "ingresso", "show", "evento"],
                 "Farmácia": ["farmacia", "droga", "raia", "pacheco", "panvel"],
-                "Posto": ["posto", "gasolina", "combustivel", "shell", "ipiranga", "br"],
+                "Posto": ["posto", "gasolina"],
                 "Vestuário": ["roupa", "moda", "sapato", "renner", "riachuelo", "cea"],
                 "Tecnologia": ["apple", "google", "amazon", "eletronico", "celular", "notebook"],
                 "Educação": ["curso", "faculdade", "escola", "ead", "universidade", "ensino"],
@@ -116,7 +118,7 @@ export class NuCsvProcessor {
     }
 
 
-    private static generateChartData(transactions: NuTransactionData[]): ChartData[] {
+    private static generateBarChartData(transactions: NuTransactionData[]): BarChartData[] {
         const months = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 
         const summary = new Map<number, { income: number; expenses: number }>();
@@ -144,6 +146,32 @@ export class NuCsvProcessor {
             income: +income.toFixed(2),
             expenses: +expenses.toFixed(2),
         }));
+    }
+
+    private static generatePizzaChartData(transactions: NuTransactionData[]): PizzaChartData[] {
+        const grup = transactions.reduce((acc, transaction) => {
+            const category = transaction.category || "outros";
+
+            if(!acc[category]) {
+                acc[category] = 0;
+            } 
+            
+            const val = Number(transaction.value) || 0;
+            acc[category] = (acc[category] || 0) + val;
+            
+            return acc;
+        }, {} as Record<string,number>)
+
+        const data = Object.entries(grup).map(([name, value]) => ({
+            name,
+            value,
+        }))
+
+        if (data.length === 0) {
+            data.push({ name: "Sem dados", value: 1 });
+        }
+
+            return data;
     }
 
     private static generateDashboardData(transactions: NuTransactionData[]): DashboardData {

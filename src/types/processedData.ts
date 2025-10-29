@@ -1,9 +1,12 @@
-import { ChartData } from "./chartData";
+
+import { BarChartData } from "./barChartData";
 import { DashboardData } from "./dashboardData";
-import { Transaction } from "./transaction";
+import { NuTransactionData } from "./NuTransactionData";
+import { PizzaChartData } from "./pizzaChartData";
 
 export interface ProcessedData {
   dashboard: DashboardData;
-  chartData: ChartData[];
-  transactions: Transaction[];
+  barChartData: BarChartData[];
+  pizzaChartData: PizzaChartData[];
+  transactions: NuTransactionData[];
 }

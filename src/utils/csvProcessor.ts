@@ -1,6 +1,6 @@
 // csvProcessor.ts
 
-import { ChartData } from "@/types/chartData";
+import { ChartData } from "@/types/barChartData";
 import { DashboardData } from "@/types/dashboardData";
 import { ProcessedData } from "@/types/processedData";
 import { Transaction } from "@/types/transaction";

@@ -1,14 +1,14 @@
 "use client"
 import Chart from "@/components/chart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BadgeDollarSign, CheckCircle2Icon, CheckIcon, DollarSign, Percent, Users } from "lucide-react";
+import { BadgeDollarSign, CheckIcon, DollarSign, Percent, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ProcessedData } from "@/types/processedData";
 import { formatValue } from "@/utils/formatValue"
 import  PizzaChart from "@/components/pizzaChart";
 import FileUpload from "@/components/FileUpload";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
+
 
 export default function App() {
 
@@ -117,8 +117,8 @@ export default function App() {
       </section>
 
       <section className="mt-4 flex flex-col md:flex-row gap-4 h-96">
-        <Chart data={processedData?.chartData} />
-        <PizzaChart transactions={processedData?.transactions} />
+        <Chart data={processedData?.barChartData} />
+        <PizzaChart data={processedData?.pizzaChartData ?? []} />
       </section>
 
 

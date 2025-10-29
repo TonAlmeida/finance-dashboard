@@ -4,7 +4,6 @@
 import { useState } from 'react';
 import { NuCsvProcessor } from '@/utils/NuCsvProcessor'; 
 import { ProcessedData } from '@/types/processedData';
-import { CSVProcessor } from "@/utils/csvProcessor"
 
 interface FileUploadProps {
   onDataProcessed: (data: ProcessedData) => void;
