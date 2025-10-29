@@ -1,5 +1,4 @@
-// types/chart.ts
-export interface ChartData {
+export type BarChartData = {
   month: string;
   income: number;
   expenses: number;

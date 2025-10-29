@@ -1,20 +1,18 @@
-// src/components/transactions/Transactions.tsx
 'use client';
 
 import { useState, useMemo } from "react";
-import { Transaction } from "@/types/transaction";
+import { NuTransactionData } from "@/types/NuTransactionData";
 import { Search, Filter, ArrowUp, ArrowDown } from "lucide-react";
 import { formatValue } from "@/utils/formatValue";
 
 interface TransactionsProps {
-  data?: Transaction[]; // Pode ser undefined inicialmente
+  data?: NuTransactionData[];
 }
 
-type SortField = 'date' | 'amount' | 'description' | 'category';
+type SortField = 'date' | 'value' | 'description' | 'category';
 type SortDirection = 'asc' | 'desc';
 
 export default function Transactions({ data = [] }: TransactionsProps) {
-  const [typeFilter, setTypeFilter] = useState<"all" | "income" | "expense">("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [dateRange, setDateRange] = useState<{ start?: string; end?: string }>({});
@@ -27,19 +25,14 @@ export default function Transactions({ data = [] }: TransactionsProps) {
 
   const filteredTransactions = useMemo(() => {
     return data.filter((t) => {
-      const matchesType = typeFilter === "all" || t.type === typeFilter;
       const matchesCategory = categoryFilter === "all" || t.category === categoryFilter;
-      const matchesSearch = 
-        t.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (t.counterpartName && t.counterpartName.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (t.document && t.document.includes(searchTerm));
+      const matchesSearch = t.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-      
       if (dateRange.start || dateRange.end) {
         const transactionDate = new Date(t.date);
         const start = dateRange.start ? new Date(dateRange.start) : null;
         const end = dateRange.end ? new Date(dateRange.end) : null;
-        
+
         if (start && transactionDate < start) return false;
         if (end) {
           const endDate = new Date(end);
@@ -48,22 +41,22 @@ export default function Transactions({ data = [] }: TransactionsProps) {
         }
       }
 
-      return matchesType && matchesCategory && matchesSearch;
+      return matchesCategory && matchesSearch;
     });
-  }, [data, typeFilter, categoryFilter, searchTerm, dateRange]);
+  }, [data, categoryFilter, searchTerm, dateRange]);
 
   const sortedTransactions = useMemo(() => {
     return [...filteredTransactions].sort((a, b) => {
       let aValue: any, bValue: any;
-      
+
       switch (sortField) {
         case 'date':
           aValue = new Date(a.date);
           bValue = new Date(b.date);
           break;
-        case 'amount':
-          aValue = a.amount;
-          bValue = b.amount;
+        case 'value':
+          aValue = a.value;
+          bValue = b.value;
           break;
         case 'description':
           aValue = a.description.toLowerCase();
@@ -85,13 +78,13 @@ export default function Transactions({ data = [] }: TransactionsProps) {
 
   const stats = useMemo(() => {
     const income = filteredTransactions
-      .filter(t => t.type === 'income')
-      .reduce((sum, t) => sum + t.amount, 0);
-    
+      .filter(t => t.value > 0)
+      .reduce((sum, t) => sum + t.value, 0);
+
     const expense = filteredTransactions
-      .filter(t => t.type === 'expense')
-      .reduce((sum, t) => sum + t.amount, 0);
-    
+      .filter(t => t.value < 0)
+      .reduce((sum, t) => sum + t.value, 0);
+
     return {
       total: income + expense,
       income,
@@ -119,10 +112,8 @@ export default function Transactions({ data = [] }: TransactionsProps) {
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      // Se já está ordenando por este campo, inverte a direção
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
-      // Se é um campo novo, define como descendente por padrão
       setSortField(field);
       setSortDirection('desc');
     }
@@ -150,16 +141,6 @@ export default function Transactions({ data = [] }: TransactionsProps) {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value as any)}
-            className="border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
-          >
-            <option value="all">Todos</option>
-            <option value="income">Receitas</option>
-            <option value="expense">Despesas</option>
-          </select>
-
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
@@ -195,10 +176,9 @@ export default function Transactions({ data = [] }: TransactionsProps) {
             />
           </div>
 
-          {(typeFilter !== "all" || categoryFilter !== "all" || searchTerm || dateRange.start || dateRange.end) && (
+          {(categoryFilter !== "all" || searchTerm || dateRange.start || dateRange.end) && (
             <button
               onClick={() => {
-                setTypeFilter("all");
                 setCategoryFilter("all");
                 setSearchTerm("");
                 setDateRange({});
@@ -242,14 +222,11 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                   {getSortIcon('category')}
                 </div>
               </th>
-              <th className="p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors">Tipo</th>
-              <th 
-                className="p-2 font-semibold text-right cursor-pointer hover:bg-gray-400 transition-colors"
-                onClick={() => handleSort('amount')}
-              >
+              <th className="p-2 font-semibold text-right cursor-pointer hover:bg-gray-400 transition-colors"
+                  onClick={() => handleSort('value')}>
                 <div className="flex items-center justify-end gap-1">
                   Valor
-                  {getSortIcon('amount')}
+                  {getSortIcon('value')}
                 </div>
               </th>
             </tr>
@@ -262,39 +239,23 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                 </td>
                 <td className="p-2">
                   <div className="font-medium">{t.description}</div>
-                  {t.counterpartName && (
-                    <div className="text-xs text-gray-500 mt-1">
-                      {t.counterpartName}
-                    </div>
-                  )}
                 </td>
                 <td className="p-2">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(t.category)}`}>
                     {t.category}
                   </span>
                 </td>
-                <td className="p-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    t.transferType 
-                      ? 'bg-orange-100 text-orange-800' 
-                      : t.type === 'income' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                  }`}>
-                    {t.transferType || (t.type === 'income' ? 'Receita' : 'Despesa')}
-                  </span>
-                </td>
                 <td className={`p-2 text-right font-semibold ${
-                  t.type === "income" ? "text-green-600" : "text-red-600"
+                  t.value >= 0 ? "text-green-600" : "text-red-600"
                 }`}>
-                  {formatValue(t.amount)}
+                  {formatValue(t.value)}
                 </td>
               </tr>
             ))}
 
             {sortedTransactions.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center p-4 text-gray-400">
+                <td colSpan={4} className="text-center p-4 text-gray-400">
                   Nenhuma transação encontrada.
                 </td>
               </tr>

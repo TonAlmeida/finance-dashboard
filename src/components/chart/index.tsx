@@ -2,7 +2,7 @@
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ChartData } from "@/types/chartData";
+import { ChartData } from "@/types/barChartData";
 import { TrendingUp } from "lucide-react";
 
 interface ChartProps {

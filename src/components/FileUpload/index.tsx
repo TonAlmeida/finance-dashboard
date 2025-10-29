@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CSVProcessor } from '@/utils/csvProcessor';
+import { NuCsvProcessor } from '@/utils/NuCsvProcessor'; 
 import { ProcessedData } from '@/types/processedData';
 
 interface FileUploadProps {
@@ -21,7 +21,7 @@ export default function FileUpload({ onDataProcessed, onError }: FileUploadProps
 
     try {
       const fileArray = Array.from(files);
-      const processedData = await CSVProcessor.processCSVFiles(fileArray);
+      const processedData = await NuCsvProcessor.processData(fileArray);
       onDataProcessed(processedData);
     } catch (error) {
       onError(error instanceof Error ? error.message : 'Erro ao processar arquivos');
