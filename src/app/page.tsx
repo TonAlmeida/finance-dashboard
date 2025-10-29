@@ -79,7 +79,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-base sm:text-lg font-bold">{processedData?.dashboard.transactionCount}</p>
+            <p className="text-base sm:text-lg font-bold">{processedData?.dashboard.transactionsCount}</p>
           </CardContent>
         </Card>
 
