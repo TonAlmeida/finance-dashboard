@@ -26,6 +26,7 @@ export class NuCsvProcessor {
                 //gerando ChartData
                 const barChartData = this.generateBarChartData(allTransactions);
                 const pizzaChartData = this.generatePizzaChartData(allTransactions);
+                console.log(pizzaChartData, "estes valores são para o pizzachart");
 
                 //gerando dashboardData
                 const dashboard = this.generateDashboardData(allTransactions);
@@ -164,14 +165,14 @@ export class NuCsvProcessor {
 
         const data = Object.entries(grup).map(([name, value]) => ({
             name,
-            value,
+            value: value < 0 ? Math.abs(value) : value,
         }))
 
         if (data.length === 0) {
             data.push({ name: "Sem dados", value: 1 });
         }
 
-            return data;
+        return data;
     }
 
     private static generateDashboardData(transactions: NuTransactionData[]): DashboardData {
