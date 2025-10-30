@@ -21,17 +21,24 @@ export default function App() {
         try {
         setProcessedData(JSON.parse(storedData));
         } catch (e) {
-        console.error("Erro ao parsear o localStorage", e);
+          console.error("Erro ao parsear o localStorage", e);
         }
     }
     }, []);
 
     useEffect(() => {
       if (processedData) {
-      localStorage.setItem('data', JSON.stringify(processedData));
-      processedData.transactions.length > 0 && setShowAlert(true);
+        localStorage.setItem('data', JSON.stringify(processedData));
+      if (processedData.transactions.length > 0) {
+        setShowAlert(true);
+      }
+
       }
     }, [processedData])
+
+    useEffect(() => {
+      console.log(error)
+    }, [error])
     
     const handleDataProcessed = (data: ProcessedData) => {
       setProcessedData(data);

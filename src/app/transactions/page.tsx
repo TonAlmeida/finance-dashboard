@@ -9,16 +9,6 @@ export default function Orders() {
     const [processedData, setProcessedData] = useState<ProcessedData | null>(null);
     const [error, setError] = useState<string>('');
 
-    const handleDataProcessed = (data: ProcessedData) => {
-        setProcessedData(data);
-        setError('');
-    };
-
-    const handleError = (errorMessage: string) => {
-        setError(errorMessage);
-        setProcessedData(null);
-    };
-
     useEffect(() => {
         const storedData = localStorage.getItem("data");
         if (storedData) {
@@ -26,9 +16,14 @@ export default function Orders() {
             setProcessedData(JSON.parse(storedData));
           } catch (e) {
             console.error("Erro ao parsear o localStorage", e);
+            setError("erro ao processar localstorage")
           }
         }
       }, []);
+
+      useEffect(() => {
+        console.log(error)
+      }, [error])
 
     return (
         <main className="sm:ml-14">

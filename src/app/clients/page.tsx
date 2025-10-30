@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatValue } from "@/utils/formatValue";
 import { NuTransactionData } from "@/types/NuTransactionData";
-import { BadgeDollarSign, Icon } from "lucide-react";
+import { BadgeDollarSign } from "lucide-react";
 
 type ClientGroup = {
   document: string;

@@ -227,7 +227,12 @@ export class NuCsvProcessor {
 
             acc.balance += value;
 
-            value > 0 ? acc.totalIncome += value : acc.totalExpenses += Math.abs(value);
+            if (value > 0) {
+                acc.totalIncome += value;
+            } else {
+                acc.totalExpenses += Math.abs(value);
+            }
+
 
             return acc;
         }, { balance: 0, totalIncome: 0, totalExpenses: 0 })
