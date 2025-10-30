@@ -47,7 +47,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
 
   const sortedTransactions = useMemo(() => {
     return [...filteredTransactions].sort((a, b) => {
-      let aValue: any, bValue: any;
+      let aValue: string | number | Date, bValue: string | number | Date;
 
       switch (sortField) {
         case 'date':
@@ -208,7 +208,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                 className="p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors"
                 onClick={() => handleSort('description')}
               >
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1 bg-gray">
                   Descrição
                   {getSortIcon('description')}
                 </div>

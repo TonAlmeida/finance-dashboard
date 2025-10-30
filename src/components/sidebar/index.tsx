@@ -6,7 +6,7 @@ import { Sheet,
         SheetContent,
         SheetTitle
  } from "../ui/sheet";
-import { DollarSignIcon, Home, HomeIcon, ImportIcon, LogOut, Package, PanelBottom, Settings, ShoppingBag, Users } from "lucide-react";
+import { DollarSignIcon, Home, LogOut, Package, PanelBottom, Users } from "lucide-react";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Tooltip } from "../ui/tooltip";
 import { useEffect, useState } from "react";
@@ -17,12 +17,19 @@ export default function Sidebar() {
     const pathName = usePathname().slice(1);
     const [ selected, setSelected ] = useState('');
     useEffect(() => {
-        pathName ? setSelected(pathName) : setSelected("home")
-    }, [pathName])
+        if (pathName) {
+            setSelected(pathName);
+        } else {
+            setSelected("home");
+        }
+    }, [pathName]);
+
 
     function sel(event: React.MouseEvent<HTMLAnchorElement>) {
         const menuId = event.currentTarget.dataset.menuId;
-        menuId && setSelected(menuId);
+        if (menuId) {
+            setSelected(menuId);
+        }
     }
 
     return (
