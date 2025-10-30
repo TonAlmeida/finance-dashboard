@@ -9,7 +9,6 @@ import { NuTransactionData } from "@/types/NuTransactionData";
 type ClientGroup = {
   document: string;
   name: string;
-  category: string;
   transactions: NuTransactionData[];
   balance: number;
 };
@@ -18,9 +17,12 @@ export default function ClientsPage() {
   const [clients, setClients] = useState<ClientGroup[]>([]);
   const [search, setSearch] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
-  const [filterType, setFilterType] = useState("");
   const [selectedClient, setSelectedClient] = useState<ClientGroup | null>(null);
 
+  const normalizeText = (text: string) =>
+    text?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim() || "";
+
+  // Agrupamento correto por nome+documento
   useEffect(() => {
     const stored = localStorage.getItem("data");
     if (!stored) return;
@@ -30,18 +32,21 @@ export default function ClientsPage() {
       const grouped: Record<string, ClientGroup> = {};
 
       parsed.transactions.forEach(tx => {
+        const name = tx.counterpartName?.trim() || "Desconhecido";
         const doc = tx.counterpartDocument || "Sem Documento";
-        if (!grouped[doc]) {
-          grouped[doc] = {
+        const key = `${normalizeText(name)}-${doc}`;
+
+        if (!grouped[key]) {
+          grouped[key] = {
             document: doc,
-            name: tx.counterpartName || "Desconhecido",
-            category: tx.category,
+            name,
             transactions: [],
             balance: 0,
           };
         }
-        grouped[doc].transactions.push(tx);
-        grouped[doc].balance += tx.value;
+
+        grouped[key].transactions.push(tx);
+        grouped[key].balance += tx.value;
       });
 
       setClients(Object.values(grouped));
@@ -50,19 +55,28 @@ export default function ClientsPage() {
     }
   }, []);
 
+  // Todas as categorias únicas
+  const allCategories = useMemo(() => {
+    const set = new Set<string>();
+    clients.forEach(c => c.transactions.forEach(tx => { if(tx.category) set.add(tx.category); }));
+    return Array.from(set);
+  }, [clients]);
+
+  // Filtragem correta por nome e categoria
   const filteredClients = useMemo(() => {
     return clients.filter(c => {
-      const matchesName = c.name.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = !filterCategory || c.category === filterCategory;
-      const matchesType =
-        !filterType || c.transactions.some(tx => tx.type === filterType);
-      return matchesName && matchesCategory && matchesType;
+      const matchesName = normalizeText(c.name).includes(normalizeText(search));
+      const matchesCategory = !filterCategory || c.transactions.some(tx => tx.category === filterCategory);
+      return matchesName && matchesCategory;
     });
-  }, [clients, search, filterCategory, filterType]);
+  }, [clients, search, filterCategory]);
+
+  const hasFilter = search || filterCategory;
 
   return (
     <main className="p-4 sm:ml-14">
-      <div className="flex flex-wrap gap-3 mb-6 items-center">
+      {/* Filtros */}
+      <div className="flex flex-wrap gap-3 mb-4 items-center">
         <input
           type="text"
           placeholder="Buscar nome..."
@@ -76,37 +90,36 @@ export default function ClientsPage() {
           className="px-3 py-2 border rounded-lg"
         >
           <option value="">Todas as categorias</option>
-          {[...new Set(clients.map(c => c.category))].map(cat => (
+          {allCategories.map(cat => (
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
-        <select
-          value={filterType}
-          onChange={e => setFilterType(e.target.value)}
-          className="px-3 py-2 border rounded-lg"
-        >
-          <option value="">Todos os tipos</option>
-          <option value="income">Entrada</option>
-          <option value="expense">Saída</option>
-        </select>
+
+        {hasFilter && (
+          <button
+            onClick={() => { setSearch(""); setFilterCategory(""); }}
+            className="px-3 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+          >
+            Limpar filtros
+          </button>
+        )}
       </div>
 
-      <div className="overflow-x-auto">
+      {/* Tabela de clientes */}
+      <div className="overflow-x-hidden">
         <table className="w-full border-collapse shadow-sm rounded-lg">
           <thead className="bg-gray-100">
             <tr>
               <th></th>
               <th className="text-left px-4 py-2">Nome</th>
-              <th className="text-left px-4 py-2">Documento</th>
-              <th className="text-left px-4 py-2">Categoria</th>
-              <th className="text-center px-4 py-2">Transações</th>
+              <th className="text-left px-4 py-2">Transações</th>
               <th className="text-right px-4 py-2">Saldo</th>
             </tr>
           </thead>
           <tbody className="divide-y">
             {filteredClients.map(c => (
               <tr
-                key={c.document}
+                key={`${c.name}-${c.document}`} 
                 onClick={() => setSelectedClient(c)}
                 className="hover:bg-gray-50 cursor-pointer transition"
               >
@@ -115,10 +128,8 @@ export default function ClientsPage() {
                     <AvatarFallback>{c.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </td>
-                <td className="px-4 py-2 font-medium">{c.name}</td>
-                <td className="px-4 py-2">{c.document}</td>
-                <td className="px-4 py-2">{c.category}</td>
-                <td className="px-4 py-2 text-center">{c.transactions.length}</td>
+                <td className="px-4 py-2 font-medium truncate max-w-xs">{c.name}</td>
+                <td className="px-4 py-2 text-right font-semibold">{c.transactions.length}</td>
                 <td className={`px-4 py-2 text-right font-semibold ${c.balance >= 0 ? "text-green-600" : "text-red-600"}`}>
                   {formatValue(c.balance)}
                 </td>
@@ -126,7 +137,7 @@ export default function ClientsPage() {
             ))}
             {filteredClients.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-6 text-center text-gray-500">
+                <td colSpan={4} className="px-4 py-6 text-center text-gray-500">
                   Nenhum cliente encontrado.
                 </td>
               </tr>
@@ -137,7 +148,7 @@ export default function ClientsPage() {
 
       {/* Modal de Detalhes */}
       <Dialog open={!!selectedClient} onOpenChange={() => setSelectedClient(null)}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl w-full max-h-[70vh] p-4 overflow-hidden rounded-lg">
           {selectedClient && (
             <>
               <DialogHeader>
@@ -146,43 +157,27 @@ export default function ClientsPage() {
                     <AvatarFallback>{selectedClient.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-semibold">{selectedClient.name}</p>
+                    <p className="font-semibold text-lg">{selectedClient.name}</p>
                     <p className="text-sm text-gray-600">{selectedClient.document}</p>
+                    <p className="text-sm text-gray-500 mt-1">Transações: {selectedClient.transactions.length}</p>
                   </div>
                 </DialogTitle>
               </DialogHeader>
 
-              <div className="mt-4 space-y-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-lg">
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">Transações</p>
-                    <p className="font-medium text-lg">{selectedClient.transactions.length}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">Saldo</p>
-                    <p className={`font-semibold text-lg ${selectedClient.balance >= 0 ? "text-green-600" : "text-red-600"}`}>
-                      {formatValue(selectedClient.balance)}
-                    </p>
-                  </div>
-                </div>
-
-                <table className="w-full text-sm border rounded-lg overflow-hidden">
-                  <thead className="bg-gray-50">
+              <div className="overflow-y-auto max-h-[60vh] overflow-x-hidden border rounded-lg mt-4">
+                <table className="w-full table-fixed text-sm border-collapse">
+                  <thead className="bg-gray-50 sticky top-0 z-10">
                     <tr>
-                      <th className="px-4 py-2 text-left">Data</th>
-                      <th className="px-4 py-2 text-left">Descrição</th>
-                      <th className="px-4 py-2 text-left">Categoria</th>
-                      <th className="px-4 py-2 text-left">Tipo</th>
-                      <th className="px-4 py-2 text-right">Valor</th>
+                      <th className="px-4 py-2 w-24">Data</th>
+                      <th className="px-4 py-2 w-full">Descrição</th>
+                      <th className="px-4 py-2 w-28 text-right">Valor</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
                     {selectedClient.transactions.map((t, i) => (
                       <tr key={i} className="hover:bg-gray-50">
-                        <td className="px-4 py-2">{new Date(t.date).toLocaleDateString()}</td>
-                        <td className="px-4 py-2">{t.description}</td>
-                        <td className="px-4 py-2">{t.category}</td>
-                        <td className="px-4 py-2 capitalize">{t.type}</td>
+                        <td className="px-4 py-2 whitespace-nowrap">{new Date(t.date).toLocaleDateString()}</td>
+                        <td className="px-4 py-2 truncate max-w-full">{t.description}</td>
                         <td className={`px-4 py-2 text-right font-semibold ${t.value >= 0 ? "text-green-600" : "text-red-600"}`}>
                           {formatValue(t.value)}
                         </td>
