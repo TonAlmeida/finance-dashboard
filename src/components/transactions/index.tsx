@@ -232,8 +232,8 @@ export default function Transactions({ data = [] }: TransactionsProps) {
             </tr>
           </thead>
           <tbody>
-            {sortedTransactions.map((t) => (
-              <tr key={t.id} className="border-b hover:bg-gray-50 transition">
+            {sortedTransactions.map((t, index) => (
+              <tr key={`${t.id}-${index}`} className="border-b hover:bg-gray-50 transition">
                 <td className="p-2 text-gray-500 whitespace-nowrap">
                   {new Date(t.date).toLocaleDateString("pt-BR")}
                 </td>
@@ -245,22 +245,13 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                     {t.category}
                   </span>
                 </td>
-                <td className={`p-2 text-right font-semibold ${
-                  t.value >= 0 ? "text-green-600" : "text-red-600"
-                }`}>
+                <td className={`p-2 text-right font-semibold ${t.value >= 0 ? "text-green-600" : "text-red-600"}`}>
                   {formatValue(t.value)}
                 </td>
               </tr>
             ))}
-
-            {sortedTransactions.length === 0 && (
-              <tr>
-                <td colSpan={4} className="text-center p-4 text-gray-400">
-                  Nenhuma transação encontrada.
-                </td>
-              </tr>
-            )}
           </tbody>
+
         </table>
       </div>
 

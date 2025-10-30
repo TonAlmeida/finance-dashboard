@@ -30,7 +30,7 @@ export default function App() {
     useEffect(() => {
       if (processedData) {
       localStorage.setItem('data', JSON.stringify(processedData));
-      setShowAlert(true);
+      processedData.transactions.length > 0 && setShowAlert(true);
       }
     }, [processedData])
     
@@ -44,7 +44,7 @@ export default function App() {
       setProcessedData(null);
     };
 
-  return (
+  return processedData?.transactions.length && processedData?.transactions.length > 0 ? (
     <main className="sm:ml-14 p-4">
       <div className="flex w-full">
         <h1 className="p-2 m-2 border-b text-md sm:text-2xl w-full">Visualizador de CSVs</h1>
@@ -141,5 +141,13 @@ export default function App() {
         </Drawer>
       }
     </main>
+  ) : (
+    <div className="ml-14">
+      <div className="flex w-full">
+        <h1 className="p-2 m-2 border-b text-md sm:text-2xl w-full">Risoflora Finance</h1>
+        <FileUpload onDataProcessed={handleDataProcessed} onError={handleError} />
+      </div>
+      Nenhum dado para mostrar
+    </div>
   )
 }

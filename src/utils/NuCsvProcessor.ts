@@ -20,13 +20,12 @@ export class NuCsvProcessor {
                     const fileData = await this.readFile(file);
                     const processedData = this.parseContent(fileData);
                     const transactions = this.mappingData(processedData);
-                    allTransactions.push(...transactions);           
+                    allTransactions.push(...transactions);
                 }
 
                 //gerando ChartData
                 const barChartData = this.generateBarChartData(allTransactions);
                 const pizzaChartData = this.generatePizzaChartData(allTransactions);
-                console.log(pizzaChartData, "estes valores são para o pizzachart");
 
                 //gerando dashboardData
                 const dashboard = this.generateDashboardData(allTransactions);
@@ -38,6 +37,7 @@ export class NuCsvProcessor {
                         transactions: allTransactions
                 });
             } catch(e) {
+                alert("erro de processamento" + e)
                 console.log("deu erro no processamento" + e);
                 reject(e);
             }
@@ -77,19 +77,60 @@ export class NuCsvProcessor {
             const text = description.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
             const categories: Record<string, string[]> = {
-                "Tabacaria": ["tabacaria", "vape", "narguile", "fumo", "cigarro"],
-                "Mercado": ["mercado", "supermercado", "carrefour", "extra", "atacadao", "hiper"],
-                "Restaurante": ["restaurante", "lanchonete", "burguer", "pizzaria", "bk", "mcdonald", "ifood"],
-                "Transporte": ["uber", "99", "cabify", "onibus", "metrô", "trem"],
-                "Entretenimento": ["cinema", "netflix", "spotify", "ingresso", "show", "evento"],
-                "Farmácia": ["farmacia", "droga", "raia", "pacheco", "panvel"],
-                "Posto": ["posto", "gasolina"],
-                "Vestuário": ["roupa", "moda", "sapato", "renner", "riachuelo", "cea"],
-                "Tecnologia": ["apple", "google", "amazon", "eletronico", "celular", "notebook"],
-                "Educação": ["curso", "faculdade", "escola", "ead", "universidade", "ensino"],
-                "Saúde": ["clinica", "hospital", "dentista", "exame", "laboratorio"],
-                "Outros": []
+                "Tabacaria": [
+                    "tabacaria", "vape", "narguile", "fumo", "cigarro", "hookah", "charuto", "cachimbo",
+                    "essência", "vaporizador", "smoke shop", "tobacco", "fumo eletrônico", "cigarros"
+                ],
+                "Mercado": [
+                    "mercado", "supermercado", "carrefour", "extra", "atacadao", "hiper", "pão de açúcar", "bompreço",
+                    "mercantil", "minimercado", "h&b", "zonamix", "bazaar", "super", "conveniência"
+                ],
+                "Restaurante": [
+                    "restaurante", "lanchonete", "burguer", "pizzaria", "bk", "mcdonald", "ifood", "food", "delivery",
+                    "fast food", "pizza", "hamburguer", "sanduiche", "comida", "jantar", "almoço", "lanche"
+                ],
+                "Transporte": [
+                    "uber", "99", "cabify", "onibus", "metrô", "metro", "trem", "lotação", "ônibus", "taxi", "rodoviária",
+                    "bilhete", "transporte", "passagem", "combustível transporte", "vias"
+                ],
+                "Entretenimento": [
+                    "cinema", "netflix", "spotify", "ingresso", "show", "evento", "teatro", "musical", "livraria",
+                    "game", "jogos", "associação cultural", "assinatura", "streaming", "ingressos", "cinematográfica"
+                ],
+                "Farmácia": [
+                    "farmacia", "droga", "raia", "pacheco", "panvel", "medicamento", "remédio", "drogaria", 
+                    "saúde", "saúde +", "botica", "ortopedia", "dermatologia"
+                ],
+                "Posto": [
+                    "posto", "gasolina", "diesel", "etanol", "combustível", "gas", "fuel", "bomba", "posto de gasolina",
+                    "abastecimento", "carburante", "lubrificante", "óleo"
+                ],
+                "Vestuário": [
+                    "roupa", "moda", "sapato", "renner", "riachuelo", "cea", "vestido", "camisa", "calça", "blusa",
+                    "tênis", "boné", "casaco", "jeans", "moda feminina", "moda masculina", "acessório", "bolsa"
+                ],
+                "Tecnologia": [
+                    "apple", "google", "amazon", "eletronico", "celular", "notebook", "tablet", "pc", "computador",
+                    "smartphone", "hardware", "software", "tecnologia", "gadgets", "smartwatch", "monitor",
+                    "impressora", "periférico"
+                ],
+                "Educação": [
+                    "curso", "faculdade", "escola", "ead", "universidade", "ensino", "professor", "educação", "instituto",
+                    "academia", "seminário", "treinamento", "curso online", "ensino superior", "aperfeiçoamento",
+                    "formação"
+                ],
+                "Saúde": [
+                    "clinica", "hospital", "dentista", "exame", "laboratorio", "saúde", "checkup", "psicólogo", "nutricionista",
+                    "oftalmologista", "ortopedista", "ginecologista", "fisioterapia", "atendimento médico",
+                    "urgência", "pronto socorro"
+                ],
+                "Outros": [
+                    "taxa", "serviço", "assinatura", "doação", "presente", "cartão", "boleto", "multas", "imposto", 
+                    "diversos", "misc", "comissão", "frete", "correios", "pagamento", "transferência", "transfer", 
+                    "depósito", "recarga", "outros"
+                ]
             };
+
 
             for (const [category, keywords] of Object.entries(categories)) {
                 if (keywords.some(keyword => text.includes(keyword))) return category;
@@ -106,6 +147,7 @@ export class NuCsvProcessor {
                 );
 
                 const [day, month, year] = normalized["data"].split("/").map(Number);
+                const [type, counterpartName, counterpartDocument ] = normalized["descrição"].trim().split("-").map(item => item.trim());
 
                 return {
                     date: new Date(year, month - 1, day),
@@ -114,6 +156,10 @@ export class NuCsvProcessor {
                     description: normalized["descrição"],
                     category: setCategory(normalized["descrição"]),
                     numberOfTransactions: data.length,
+
+                    type,
+                    counterpartName,
+                    counterpartDocument,
                 };
         });
     }
