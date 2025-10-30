@@ -20,13 +20,12 @@ export class NuCsvProcessor {
                     const fileData = await this.readFile(file);
                     const processedData = this.parseContent(fileData);
                     const transactions = this.mappingData(processedData);
-                    allTransactions.push(...transactions);           
+                    allTransactions.push(...transactions);
                 }
 
                 //gerando ChartData
                 const barChartData = this.generateBarChartData(allTransactions);
                 const pizzaChartData = this.generatePizzaChartData(allTransactions);
-                console.log(pizzaChartData, "estes valores são para o pizzachart");
 
                 //gerando dashboardData
                 const dashboard = this.generateDashboardData(allTransactions);
@@ -38,6 +37,7 @@ export class NuCsvProcessor {
                         transactions: allTransactions
                 });
             } catch(e) {
+                alert("erro de processamento" + e)
                 console.log("deu erro no processamento" + e);
                 reject(e);
             }
@@ -106,6 +106,7 @@ export class NuCsvProcessor {
                 );
 
                 const [day, month, year] = normalized["data"].split("/").map(Number);
+                const [type, counterpartName, counterpartDocument ] = normalized["descrição"].trim().split("-").map(item => item.trim());
 
                 return {
                     date: new Date(year, month - 1, day),
@@ -114,6 +115,10 @@ export class NuCsvProcessor {
                     description: normalized["descrição"],
                     category: setCategory(normalized["descrição"]),
                     numberOfTransactions: data.length,
+
+                    type,
+                    counterpartName,
+                    counterpartDocument,
                 };
         });
     }

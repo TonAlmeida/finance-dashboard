@@ -6,4 +6,8 @@ export type NuTransactionData = {
     description: string,
 
     category: string,
+
+    type: string;
+    counterpartName: string;
+    counterpartDocument?: string;
 }
