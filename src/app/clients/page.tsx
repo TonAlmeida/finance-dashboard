@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatValue } from "@/utils/formatValue";
 import { NuTransactionData } from "@/types/NuTransactionData";
+import { BadgeDollarSign, Icon } from "lucide-react";
 
 type ClientGroup = {
   document: string;
@@ -110,9 +111,9 @@ export default function ClientsPage() {
         <table className="w-full border-collapse shadow-sm rounded-lg">
           <thead className="bg-gray-100">
             <tr>
-              <th></th>
+              <th className="hidden sm:flex"></th>
               <th className="text-left px-4 py-2">Nome</th>
-              <th className="text-left px-4 py-2">Transações</th>
+              <th className="text-left px-4 py-2"><BadgeDollarSign /></th>
               <th className="text-right px-4 py-2">Saldo</th>
             </tr>
           </thead>
@@ -123,13 +124,13 @@ export default function ClientsPage() {
                 onClick={() => setSelectedClient(c)}
                 className="hover:bg-gray-50 cursor-pointer transition"
               >
-                <td className="px-4 py-2">
+                <td className="hidden sm:flex px-4 py-2">
                   <Avatar>
                     <AvatarFallback>{c.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </td>
-                <td className="px-4 py-2 font-medium truncate max-w-xs">{c.name}</td>
-                <td className="px-4 py-2 text-right font-semibold">{c.transactions.length}</td>
+                <td className="px-4 py-2 font-medium truncate w-full max-w-35 sm:max-w-90 text-xs sm:text-sm">{c.name}</td>
+                <td className="px-4 py-2 text-right font-semibold w-0.5">{c.transactions.length}</td>
                 <td className={`px-4 py-2 text-right font-semibold ${c.balance >= 0 ? "text-green-600" : "text-red-600"}`}>
                   {formatValue(c.balance)}
                 </td>

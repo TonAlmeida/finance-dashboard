@@ -214,7 +214,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                 </div>
               </th>
               <th 
-                className="p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors"
+                className="hidden sm:flex p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors"
                 onClick={() => handleSort('category')}
               >
                 <div className="flex items-center gap-1">
@@ -238,9 +238,9 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                   {new Date(t.date).toLocaleDateString("pt-BR")}
                 </td>
                 <td className="p-2">
-                  <div className="font-medium">{t.description}</div>
+                  <div className="font-medium text-xs sm:text-sm truncate w-full max-w-35 sm:max-w-[1000px]">{t.description}</div>
                 </td>
-                <td className="p-2">
+                <td className="hidden sm:flex p-2">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(t.category)}`}>
                     {t.category}
                   </span>
