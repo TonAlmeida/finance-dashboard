@@ -11,7 +11,6 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 
 
 export default function App() {
-
   const [processedData, setProcessedData] = useState<ProcessedData | null>(null);
     const [error, setError] = useState<string>('');
     const [showAlert, setShowAlert] = useState<boolean>(false);
@@ -46,11 +45,16 @@ export default function App() {
 
   return processedData?.transactions.length && processedData?.transactions.length > 0 ? (
     <main className="sm:ml-14 p-4">
+<<<<<<< HEAD
       <div className="flex w-full">
         <h1 className="p-2 m-2 border-b text-md sm:text-2xl w-full">Visualizador de CSVs</h1>
+=======
+      <div className="flex w-full flex-col sm:flex-row">
+        <h1 className="hidden sm:flex p-2 m-2 border-b text-md sm:text-2xl w-full text-left sm:text-center">Risoflora Finance</h1>
+>>>>>>> dev
         <FileUpload onDataProcessed={handleDataProcessed} onError={handleError} />
       </div>
-      <section className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4">
         <Card>
           <CardHeader>
             <div className="flex items-center justify-center">

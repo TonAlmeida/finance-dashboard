@@ -61,7 +61,7 @@ export class NuCsvProcessor {
         for(let i = 1; i < lines.length; i++) {
             const campos = lines[i].split(",");
             if (campos.every(c => c.trim() === "")) continue;
-            let current: Record<string, string> = {}
+            const current: Record<string, string> = {}
             for(let j = 0; j < campos.length; j++) {
                 current[headers[j]] = campos[j];
             }

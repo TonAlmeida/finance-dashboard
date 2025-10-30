@@ -2,11 +2,10 @@
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { ChartData } from "@/types/barChartData";
-import { TrendingUp } from "lucide-react";
+import { BarChartData } from "@/types/barChartData";
 
 interface ChartProps {
-  data?: ChartData[];
+  data?: BarChartData[];
 }
 
 export const description = "An area chart with a legend";
