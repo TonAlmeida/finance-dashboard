@@ -110,10 +110,6 @@ export default function CategoryPieChart({
             <Legend />
           </PieChart>
         </ResponsiveContainer>
-
-        <p className="text-xs text-muted-foreground mt-2 text-center">
-          Total: <span className="font-semibold">R$ {total.toFixed(2)}</span>
-        </p>
       </CardContent>
     </Card>
   );
