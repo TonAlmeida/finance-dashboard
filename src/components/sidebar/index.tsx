@@ -6,7 +6,7 @@ import { Sheet,
         SheetContent,
         SheetTitle
  } from "../ui/sheet";
-import { DollarSignIcon, Home, LogOut, Package, PanelBottom, Users } from "lucide-react";
+import { DollarSignIcon, DownloadIcon, Home, LogOut, Package, PanelBottom, Users } from "lucide-react";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
 import { Tooltip } from "../ui/tooltip";
 import { useEffect, useState } from "react";
@@ -78,6 +78,18 @@ export default function Sidebar() {
                             </TooltipContent>
                         </Tooltip>
 
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <Link onClick={sel} data-menu-id="data" href="/data"className={`${selected === 'data' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
+                                    <DownloadIcon className="h-5 w-5" />
+                                    <span className="sr-only">gerar dados</span>
+                                </Link>
+                            </TooltipTrigger>
+                            <TooltipContent side="right" >
+                                <p className="px-3 border rounded-sm bg-white">gerar dados</p>
+                            </TooltipContent>
+                        </Tooltip>
+
                     </TooltipProvider>
                 </nav>
                 <nav className="flex flex-col items-center gap-4 px-2 py-5 h-full">
@@ -128,6 +140,11 @@ export default function Sidebar() {
                                 <Link onClick={sel} data-menu-id="clients" href="/clients" className={`${selected === 'clients' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
                                     <Users className="h-5 w-5 transition-all"/>
                                     <span>contrapartes</span>
+                                </Link>
+
+                                <Link onClick={sel} data-menu-id="data" href="/data" className={`${selected === 'data' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
+                                    <DownloadIcon className="h-5 w-5 transition-all"/>
+                                    <span>gerar dados</span>
                                 </Link>
 
                             </nav>

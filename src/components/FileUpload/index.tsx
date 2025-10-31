@@ -1,9 +1,9 @@
-// components/FileUpload.tsx
 'use client';
 
 import { useState } from 'react';
 import { NuCsvProcessor } from '@/utils/NuCsvProcessor'; 
 import { ProcessedData } from '@/types/processedData';
+import { Card } from '../ui/card';
 
 interface FileUploadProps {
   onDataProcessed: (data: ProcessedData) => void;
@@ -23,28 +23,33 @@ export default function FileUpload({ onDataProcessed, onError }: FileUploadProps
       const fileArray = Array.from(files);
       const processedData = await NuCsvProcessor.processData(fileArray);
       onDataProcessed(processedData);
+      if(processedData) localStorage.setItem("data", JSON.stringify(processedData))
     } catch (error) {
       onError(error instanceof Error ? error.message : 'Erro ao processar arquivos');
+      console.log(error);
     } finally {
       setIsProcessing(false);
     }
   };
 
   return (
-    <div className="flex justify-end items-center">
-      <input
-        id='mainInput'
-        type="file"
-        accept=".csv"
-        multiple
-        onChange={handleFileChange}
-        disabled={isProcessing}
-        style={{ appearance: 'none' }}
-        className="text-sm p-3 text-gray-500 file:mr-0 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-      />
-      {isProcessing && (
-        <p className="mt-2 text-sm text-gray-600">Processando arquivos...</p>
-      )}
-    </div>
+    <Card className="mx-auto max-w-xl shadow-lg border rounded-2xl bg-white w-full">       
+      <div className="flex justify-around items-center w-full">
+        <h3>Importar arquivos CSVs</h3>
+        <input
+          id='mainInput'
+          type="file"
+          accept=".csv"
+          multiple
+          onChange={handleFileChange}
+          disabled={isProcessing}
+          style={{ appearance: 'none' }}
+          className="text-sm p-3 text-gray-500 file:mr-0 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+        />
+        {isProcessing && (
+          <p className="mt-2 text-sm text-gray-600">Processando arquivos...</p>
+        )}
+      </div>
+    </Card>
   );
 }

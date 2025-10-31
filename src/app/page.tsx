@@ -10,52 +10,27 @@ import FileUpload from "@/components/FileUpload";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 
 
+
 export default function App() {
-  const [processedData, setProcessedData] = useState<ProcessedData | null>(null);
-    const [error, setError] = useState<string>('');
-    const [showAlert, setShowAlert] = useState<boolean>(false);
-
-    useEffect(() => {
-    const storedData = localStorage.getItem("data");
-    if (storedData) {
-        try {
-        setProcessedData(JSON.parse(storedData));
-        } catch (e) {
-          console.error("Erro ao parsear o localStorage", e);
-        }
-    }
-    }, []);
-
-    useEffect(() => {
-      if (processedData) {
-        localStorage.setItem('data', JSON.stringify(processedData));
-      if (processedData.transactions.length > 0) {
-        setShowAlert(true);
-      }
-
-      }
-    }, [processedData])
-
-    useEffect(() => {
-      console.log(error)
-    }, [error])
-    
-    const handleDataProcessed = (data: ProcessedData) => {
-      setProcessedData(data);
-      setError('');
-    };
+  const [data, setData] = useState<ProcessedData | null>(null);
+  const [showAlert, setShowAlert ] = useState<boolean>(false);
   
-      const handleError = (errorMessage: string) => {
-      setError(errorMessage);
-      setProcessedData(null);
-    };
+  useEffect(() => {
+    const dataFromStorage = localStorage.getItem("data");
+    try{
+      const parsedData = dataFromStorage && JSON.parse(dataFromStorage);
+      setData(parsedData);
+      setShowAlert(true);
+    } catch (e) {
+      console.log("erro no parse", e);
+    }
+  }, [])
 
-  return processedData?.transactions.length && processedData?.transactions.length > 0 ? (
+  return data ? (
     <main className="sm:ml-14 p-4">
-      <div className="flex w-full flex-col sm:flex-row border-b">
+      <header className="border-b mb-4">
         <h1 className="hidden sm:flex p-2 m-2 text-md sm:text-2xl w-full text-left sm:text-center">Risoflora Finance</h1>
-        <FileUpload onDataProcessed={handleDataProcessed} onError={handleError} />
-      </div>
+      </header>
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4">
         <Card>
           <CardHeader>
@@ -69,7 +44,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className={`text-base sm:text-lg font-bold ${processedData && processedData?.dashboard.balance > 0 ? 'text-green-600' : 'text-red-600'}`}>{formatValue(processedData?.dashboard.balance || 0)}</p>
+            <p className={`text-base sm:text-lg font-bold ${data.dashboard.balance > 0 ? 'text-green-600' : 'text-red-600'}`}>{formatValue(data.dashboard.balance)}</p>
           </CardContent>
         </Card>
 
@@ -85,7 +60,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-base sm:text-lg font-bold">{processedData?.dashboard.transactionsCount}</p>
+            <p className="text-base sm:text-lg font-bold">{data.dashboard.transactionsCount}</p>
           </CardContent>
         </Card>
 
@@ -101,7 +76,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-green-700 sm:text-lg font-bold">{formatValue(processedData?.dashboard.totalIncome || 0)}</p>
+            <p className="text-green-700 sm:text-lg font-bold">{formatValue(data.dashboard.totalIncome)}</p>
           </CardContent>
         </Card>
 
@@ -117,14 +92,14 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-red-700 sm:text-lg font-bold">{formatValue(processedData?.dashboard.totalExpenses || 0)}</p>
+            <p className="text-red-700 sm:text-lg font-bold">{formatValue(data.dashboard.totalExpenses)}</p>
           </CardContent>
         </Card>
       </section>
 
       <section className="mt-4 flex flex-col md:flex-row gap-4 h-96">
-        <Chart data={processedData?.barChartData} />
-        <PizzaChart data={processedData?.pizzaChartData ?? []} />
+        <Chart data={data.barChartData} />
+        <PizzaChart data={data.pizzaChartData} />
       </section>
 
 
@@ -149,10 +124,6 @@ export default function App() {
     </main>
   ) : (
     <div className="ml-0 sm:ml-14 flex flex-col justify-center items-center max-w-full overflow-x-hidden">
-      <div className="flex flex-col sm:flex-row sm:w-full w-80 border-b">
-        <h1 className="hidden sm:flex w-full p-2 m-2 text-md sm:text-2xl">Risoflora Finance</h1>
-        <FileUpload onDataProcessed={handleDataProcessed} onError={handleError} />
-      </div>
       <div className="text-center">Nenhum dado para mostrar :(</div>
     </div>
 
