@@ -149,11 +149,11 @@ export default function App() {
     </main>
   ) : (
     <div className="ml-14">
-      <div className="flex w-full">
+      <div className="flex w-full flex-col sm:flex-row">
         <h1 className="p-2 m-2 border-b text-md sm:text-2xl w-full">Risoflora Finance</h1>
         <FileUpload onDataProcessed={handleDataProcessed} onError={handleError} />
       </div>
-      Nenhum dado para mostrar
+      <div className="text-center w-full">Nenhum dado para mostrar :(</div>
     </div>
   )
 }
