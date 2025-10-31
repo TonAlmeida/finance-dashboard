@@ -4,6 +4,8 @@ import { useState, useMemo } from "react";
 import { NuTransactionData } from "@/types/NuTransactionData";
 import { Search, Filter, ArrowUp, ArrowDown } from "lucide-react";
 import { formatValue } from "@/utils/formatValue";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Button } from "../ui/button";
 
 interface TransactionsProps {
   data?: NuTransactionData[];
@@ -238,7 +240,14 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                   {new Date(t.date).toLocaleDateString("pt-BR")}
                 </td>
                 <td className="p-2">
-                  <div className="font-medium text-xs sm:text-sm truncate w-full max-w-35 sm:max-w-[1000px]">{t.description}</div>
+                 <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="font-medium text-xs sm:text-sm truncate max-w-35 sm:max-w-[500px]">{t.description}</div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t.description}</p>
+                  </TooltipContent>
+                </Tooltip>
                 </td>
                 <td className="hidden sm:flex p-2">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(t.category)}`}>
