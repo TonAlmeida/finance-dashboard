@@ -52,8 +52,8 @@ export default function App() {
 
   return processedData?.transactions.length && processedData?.transactions.length > 0 ? (
     <main className="sm:ml-14 p-4">
-      <div className="flex w-full flex-col sm:flex-row">
-        <h1 className="hidden sm:flex p-2 m-2 border-b text-md sm:text-2xl w-full text-left sm:text-center">Risoflora Finance</h1>
+      <div className="flex w-full flex-col sm:flex-row border-b">
+        <h1 className="hidden sm:flex p-2 m-2 text-md sm:text-2xl w-full text-left sm:text-center">Risoflora Finance</h1>
         <FileUpload onDataProcessed={handleDataProcessed} onError={handleError} />
       </div>
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4">
