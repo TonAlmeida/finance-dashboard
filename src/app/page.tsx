@@ -148,12 +148,13 @@ export default function App() {
       }
     </main>
   ) : (
-    <div className="sm:ml-14 flex flex-col justify-center items-center">
-      <div className="flex flex-col sm:flex-row">
-        <h1 className="hidden sm:flex p-2 m-2 border-b text-md sm:text-2xl">Risoflora Finance</h1>
+    <div className="ml-0 sm:ml-14 flex flex-col justify-center items-center max-w-full overflow-x-hidden">
+      <div className="flex flex-col sm:flex-row sm:w-full w-80 border-b">
+        <h1 className="hidden sm:flex w-full p-2 m-2 text-md sm:text-2xl">Risoflora Finance</h1>
         <FileUpload onDataProcessed={handleDataProcessed} onError={handleError} />
       </div>
-      <div className="text-center border">Nenhum dado para mostrar :(</div>
+      <div className="text-center">Nenhum dado para mostrar :(</div>
     </div>
+
   )
 }
