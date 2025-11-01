@@ -127,7 +127,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
   };
 
   return (
-    <section className="flex-1 bg-white rounded-2xl shadow p-4 overflow-auto">
+    <section className="flex-1 bg-white shadow p-4 overflow-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
           <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">

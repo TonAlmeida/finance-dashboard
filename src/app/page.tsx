@@ -27,22 +27,22 @@ export default function App() {
   }, [])
 
   return data ? (
-    <main className="sm:ml-14 p-4">
+    <main className="sm:ml-14 h-dvh p-4 bg-gradient-to-r from-gray-50 to-gray-300">
       <Header />
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4 mt-4">
-        <Card>
+        <Card className="bg-gradient-to-r from-blue-900 to-blue-500 text-white">
           <CardHeader>
             <div className="flex items-center justify-center">
-              <CardTitle className="text-lg sm:text-xl text-gray-700 select-none">Saldo Total</CardTitle>
+              <CardTitle className="text-lg sm:text-xl text-white select-none">Saldo Total</CardTitle>
               <DollarSign className="ml-auto w-4 h-4" />
             </div>
-            <CardDescription>
+            <CardDescription className="text-white font-light">
               saldo total no período
             </CardDescription>
           </CardHeader>
 
           <CardContent>
-            <p className={`text-base sm:text-lg font-bold ${data.dashboard.balance > 0 ? 'text-green-600' : 'text-red-600'}`}>{formatValue(data.dashboard.balance)}</p>
+            <p className={`text-base sm:text-lg font-bold ${data.dashboard.balance > 0 ? 'text-green-200' : 'text-red-200'}`}>{formatValue(data.dashboard.balance)}</p>
           </CardContent>
         </Card>
 

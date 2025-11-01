@@ -26,7 +26,7 @@ export default function Orders() {
       }, [error])
 
     return (
-        <main className="sm:ml-14">
+        <main className="sm:ml-14 bg-gradient-to-r from-gray-50 to-gray-300">
             <Transactions data={processedData?.transactions}/>
         </main>
     )

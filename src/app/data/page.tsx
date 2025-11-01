@@ -94,10 +94,8 @@ export default function Data() {
     const dashboard: DashboardData = processedData?.dashboard ?? defaultDashboardData;
 
     return (
-        <main className="sm:ml-14 p-4">
-          
-          
-          <div className={`opacity-0 absolute flex justify-end w-full pr-28 ${showAlert && 'opacity-100'}`}>
+        <main className="sm:ml-14 p-4 bg-gradient-to-r from-gray-50 to-gray-300 h-dvh">
+          <div className={`opacity-0 w-full absolute flex justify-end pr-28 ${showAlert && 'opacity-100'}`}>
             <Alert className="max-w-lg bg-green-100">
               <CheckCircle2Icon />
               <AlertTitle>Sucesso! arquivos carregados corretamente</AlertTitle>
@@ -189,11 +187,11 @@ export default function Data() {
                   </div>
 
                   
-                  <div className="flex justify-end gap-2 pt-2">
+                  <div className="flex justify-end gap-2 pt-2 col-span-2">
                     <Button className="cursor-pointer" type="button" variant="outline" onClick={() => reset()}>
                       Limpar
                     </Button>
-                    <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 cursor-pointer">
+                    <Button type="submit" variant={"ghost"} className="bg-blue-100 hover:bg-blue-200 cursor-pointer text-blue-600 px-10 py-2">
                       Salvar
                     </Button>
                   </div>
