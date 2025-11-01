@@ -7,13 +7,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, CheckIcon, DollarSign, FileText, User } from "lucide-react";
+import { Calendar, CheckCircle2Icon, CheckIcon, DollarSign, FileText, User } from "lucide-react";
 import { toast } from "sonner";
 import { categories } from "@/utils/categoriesList";
 import { useEffect, useState } from "react";
 import { ProcessedData } from "@/types/processedData";
 import FileUpload from "@/components/FileUpload";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Header } from "@/components/header";
+import { DashboardData } from "@/types/dashboardData";
+import { formatValue } from "@/utils/formatValue";
 
 export const transactionSchema = z.object({
   date: z.string().nonempty("A data é obrigatória"),
@@ -48,16 +51,6 @@ export default function Data() {
     }, []);
 
     useEffect(() => {
-      if (processedData) {
-        localStorage.setItem('data', JSON.stringify(processedData));
-      if (processedData.transactions.length > 0) {
-        setShowAlert(true);
-      }
-
-      }
-    }, [processedData])
-
-    useEffect(() => {
       console.log(error)
     }, [error])
 
@@ -85,15 +78,38 @@ export default function Data() {
       reset();
     };
 
-    
+    const onSucess = () => {
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+    }
+
+    const defaultDashboardData: DashboardData = {
+      balance: 0,
+      totalExpenses: 0,
+      totalIncome: 0,
+      transactionsCount: 0
+    }
+    const dashboard: DashboardData = processedData?.dashboard ?? defaultDashboardData;
 
     return (
-        <main className="sm:ml-14">
-          <header className="border-b mb-4">
-            <h1 className="hidden sm:flex p-2 m-2 text-md sm:text-2xl w-full text-left sm:text-center">Risoflora Finance</h1>
-          </header>
+        <main className="sm:ml-14 p-4">
+          {showAlert && 
+          <div className="absolute top-4 z-50 flex justify-center w-full" >
+            <Alert className="max-w-[350px] bg-green-100">
+              <CheckCircle2Icon />
+              <AlertTitle>Sucesso! arquivos carregados corretamente</AlertTitle>
+              <AlertDescription>
+                foram importados {dashboard.transactionsCount} transações, totalizando {formatValue(dashboard.totalIncome)} recebidos,
+                {formatValue(dashboard.totalExpenses)} gastos, com um balanço total de {formatValue(dashboard.balance)}
+              </AlertDescription>
+            </Alert>
+          </div>
+          }
+          <Header />
           <div className="flex flex-col w-full gap-4">
-            <FileUpload onDataProcessed={handleData} onError={handleError} />
+            <FileUpload onDataProcessed={handleData} onError={handleError} onSucess={onSucess} />
             <Card className="mx-auto max-w-xl shadow-lg border rounded-2xl bg-white w-full">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold flex items-center gap-2">
@@ -183,25 +199,6 @@ export default function Data() {
               </CardContent>
             </Card>
           </div>
-
-          {showAlert && 
-            <Drawer open={showAlert} onOpenChange={setShowAlert}>
-              <DrawerTrigger></DrawerTrigger>
-              <DrawerContent
-                style={{ transformOrigin: "top center" }}
-              >
-                <DrawerHeader>
-                  <DrawerTitle className="flex justify-center items-center"><CheckIcon />Sucesso!</DrawerTitle>
-                  <DrawerDescription>Dados carregados corretamente!</DrawerDescription>
-                </DrawerHeader>
-                <DrawerFooter>
-                  <DrawerClose>
-                    Fechar
-                  </DrawerClose>
-                </DrawerFooter>
-              </DrawerContent>
-            </Drawer>
-          }
         </main>
     )
 }

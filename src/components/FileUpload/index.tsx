@@ -8,9 +8,10 @@ import { Card } from '../ui/card';
 interface FileUploadProps {
   onDataProcessed: (data: ProcessedData) => void;
   onError: (error: string) => void;
+  onSucess?: () => void;
 }
 
-export default function FileUpload({ onDataProcessed, onError }: FileUploadProps) {
+export default function FileUpload({ onDataProcessed, onError, onSucess }: FileUploadProps) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,6 +25,7 @@ export default function FileUpload({ onDataProcessed, onError }: FileUploadProps
       const processedData = await NuCsvProcessor.processData(fileArray);
       onDataProcessed(processedData);
       if(processedData) localStorage.setItem("data", JSON.stringify(processedData))
+      onSucess?.();
     } catch (error) {
       onError(error instanceof Error ? error.message : 'Erro ao processar arquivos');
       console.log(error);

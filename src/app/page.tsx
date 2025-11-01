@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import { ProcessedData } from "@/types/processedData";
 import { formatValue } from "@/utils/formatValue"
 import  PizzaChart from "@/components/pizzaChart";
-import FileUpload from "@/components/FileUpload";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Header } from "@/components/header";
 
 
 
@@ -28,9 +28,7 @@ export default function App() {
 
   return data ? (
     <main className="sm:ml-14 p-4">
-      <header className="border-b mb-4">
-        <h1 className="hidden sm:flex p-2 m-2 text-md sm:text-2xl w-full text-left sm:text-center">Risoflora Finance</h1>
-      </header>
+      <Header />
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4">
         <Card>
           <CardHeader>
