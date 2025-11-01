@@ -2,10 +2,9 @@
 
 import { useState, useMemo } from "react";
 import { NuTransactionData } from "@/types/NuTransactionData";
-import { Search, Filter, ArrowUp, ArrowDown } from "lucide-react";
+import { Search, Filter, ArrowUp, ArrowDown, DollarSign } from "lucide-react";
 import { formatValue } from "@/utils/formatValue";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { Button } from "../ui/button";
 
 interface TransactionsProps {
   data?: NuTransactionData[];
@@ -127,7 +126,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
   };
 
   return (
-    <section className="flex-1 shadow p-4 overflow-auto bg-moss text-olive">
+    <section className="flex-1 shadow p-4 overflow-auto text-olive bg-white">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
           <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
@@ -196,7 +195,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="border-b text-left bg-[#6B6A3A] text-gray-50">
+            <tr className="border-b text-left back">
               <th 
                 className="p-2 font-semibold cursor-pointer"
                 onClick={() => handleSort('date')}
@@ -227,7 +226,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
               <th className="p-2 font-semibold text-right cursor-pointer"
                   onClick={() => handleSort('value')}>
                 <div className="flex items-center justify-end gap-1">
-                  Valor
+                  <span className="font"><DollarSign /></span>
                   {getSortIcon('value')}
                 </div>
               </th>

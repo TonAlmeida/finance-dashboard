@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatValue } from "@/utils/formatValue";
 import { NuTransactionData } from "@/types/NuTransactionData";
-import { BadgeDollarSign } from "lucide-react";
+import { BadgeDollarSign, DollarSign } from "lucide-react";
 
 type ClientGroup = {
   document: string;
@@ -110,11 +110,11 @@ export default function ClientsPage() {
       <div className="overflow-x-hidden">
         <table className="w-full border-collapse shadow-sm rounded-lg">
           <thead className="bg-gray-100">
-            <tr>
+            <tr className="back">
               <th className="hidden sm:flex"></th>
               <th className="text-left px-4 py-2">Nome</th>
               <th className="text-left px-4 py-2"><BadgeDollarSign /></th>
-              <th className="text-right px-4 py-2">Saldo</th>
+              <th className="flex justify-end px-4 py-2"><DollarSign /></th>
             </tr>
           </thead>
           <tbody className="divide-y">

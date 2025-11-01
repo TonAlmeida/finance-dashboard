@@ -37,7 +37,7 @@ export default function Sidebar() {
             <aside className="hidden fixed inset-y-0 left-0 z-10 w-14 border-r bg-background sm:flex flex-col">
                 <nav className="flex flex-col items-center gap-4 px-2 py-5">
                     <TooltipProvider>
-                        <Link data-menu-id="home" onClick={sel} href="/" className="flex h-9 w-9 shrink-0 items-center justify-center bg-primary text-primary-foreground rounded-full">
+                        <Link data-menu-id="home" onClick={sel} href="/" className="flex h-9 w-9 shrink-0 items-center justify-center back text-primary-foreground rounded-full">
                             <Package className="h-4 w-4" />
                             <span className="sr-only">Dashbord Avatar</span>
                         </Link>
@@ -122,7 +122,7 @@ export default function Sidebar() {
                         <SheetContent side="left" className="sm:max-w-xs">
                             <SheetTitle className="sr-only">conteúdo</SheetTitle>
                             <nav className="grid gap-6 text-lg font-medium">
-                                <Link data-menu-id="home" onClick={sel} href="/" className="ml-5 mt-5 flex h-10 w-10 bg-primary rounded-full text-lg items-center justify-center text-white md:text-base gap-2">
+                                <Link data-menu-id="home" onClick={sel} href="/" className="ml-5 mt-5 flex h-10 w-10 beautifulBack rounded-full text-lg items-center justify-center text-white md:text-base gap-2">
                                     <Package className="h-5 w-5 transition-all"/>
                                     <span className="sr-only">logo do projeto</span>
                                 </Link>

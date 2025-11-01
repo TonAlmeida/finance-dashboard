@@ -28,7 +28,7 @@ export default function App() {
     <main className="sm:ml-14 h-full p-4 bg-white text-[#6B6A3A]">
       <Header />
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4 mt-4">
-        <Card className="bg-gradient-to-r from-[#6B6A3A] to-[#e2e2d9] text-white">
+        <Card className="back">
           <CardHeader>
             <div className="flex items-center justify-center">
               <CardTitle className="text-lg sm:text-xl text-white select-none">Saldo Total</CardTitle>

@@ -144,6 +144,20 @@
 
 /* my css */
 .selected {
-  background-color: black;
+  background-color: green;
+  color: white;;
+}
+
+.font {
+  color: #255029;
+}
+
+.beautifulBack{
+  background: linear-gradient(to right, #485726 80%, #647935);
+  color: rgb(221, 219, 219);
+}
+
+.back {
+  background-color: green;
   color: white;
 }
