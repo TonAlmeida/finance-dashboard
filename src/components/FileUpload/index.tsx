@@ -34,9 +34,8 @@ export default function FileUpload({ onDataProcessed, onError, onSucess }: FileU
     }
   };
 
-  return (
-    <Card className="mx-auto max-w-xl shadow-lg border rounded-2xl bg-white w-full">       
-      <div className="flex justify-around items-center w-full">
+  return (       
+      <div className="flex justify-around items-center w-full border-b-2 border-green-500 mb-4 py-4">
         <h3>Importar arquivos CSVs</h3>
         <input
           id='mainInput'
@@ -52,6 +51,5 @@ export default function FileUpload({ onDataProcessed, onError, onSucess }: FileU
           <p className="mt-2 text-sm text-gray-600">Processando arquivos...</p>
         )}
       </div>
-    </Card>
   );
 }

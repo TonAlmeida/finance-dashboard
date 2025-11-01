@@ -95,9 +95,10 @@ export default function Data() {
 
     return (
         <main className="sm:ml-14 p-4">
-          {showAlert && 
-          <div className="absolute top-4 z-50 flex justify-center w-full" >
-            <Alert className="max-w-[350px] bg-green-100">
+          
+          
+          <div className={`opacity-0 absolute flex justify-end w-full pr-28 ${showAlert && 'opacity-100'}`}>
+            <Alert className="max-w-lg bg-green-100">
               <CheckCircle2Icon />
               <AlertTitle>Sucesso! arquivos carregados corretamente</AlertTitle>
               <AlertDescription>
@@ -106,19 +107,20 @@ export default function Data() {
               </AlertDescription>
             </Alert>
           </div>
-          }
+          
+          
           <Header />
-          <div className="flex flex-col w-full gap-4">
-            <FileUpload onDataProcessed={handleData} onError={handleError} onSucess={onSucess} />
-            <Card className="mx-auto max-w-xl shadow-lg border rounded-2xl bg-white w-full">
+          <div className="flex w-full">
+            <Card className="mx-auto max-w-xl shadow-lg border rounded-2xl bg-white w-full m-4">
               <CardHeader>
+                <FileUpload onDataProcessed={handleData} onError={handleError} onSucess={onSucess} />
                 <CardTitle className="text-lg font-semibold flex items-center gap-2">
                   <FileText size={20} /> Nova Transação Manual
                 </CardTitle>
               </CardHeader>
 
               <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col">
                     <Label htmlFor="date" className="flex items-center gap-2 mb-2">
                       <Calendar size={16} /> Data
@@ -173,7 +175,7 @@ export default function Data() {
                     {errors.type && <p className="text-red-600 text-xs">{errors.type.message}</p>}
                   </div>
 
-                  <div className="flex flex-col">
+                  <div className="flex flex-col col-span-2">
                     <Label htmlFor="counterpartName" className="flex items-center gap-2 mb-2">
                       <User size={16} /> Nome da contraparte
                     </Label>
@@ -181,7 +183,7 @@ export default function Data() {
                     {errors.counterpartName && <p className="text-red-600 text-xs">{errors.counterpartName.message}</p>}
                   </div>
 
-                  <div className="flex flex-col">
+                  <div className="flex flex-col col-span-2">
                     <Label htmlFor="counterpartDocument" className="mb-2">Documento (opcional)</Label>
                     <Input type="text" id="counterpartDocument" {...register("counterpartDocument")} />
                   </div>
