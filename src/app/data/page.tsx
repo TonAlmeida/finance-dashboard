@@ -94,7 +94,7 @@ export default function Data() {
     const dashboard: DashboardData = processedData?.dashboard ?? defaultDashboardData;
 
     return (
-        <main className="sm:ml-14 p-4 bg-gradient-to-r from-gray-50 to-gray-300 h-dvh">
+        <main className="sm:ml-14 p-4 bg-white h-dvh">
           <div className={`opacity-0 w-full absolute flex justify-end pr-28 ${showAlert && 'opacity-100'}`}>
             <Alert className="max-w-lg bg-green-100">
               <CheckCircle2Icon />

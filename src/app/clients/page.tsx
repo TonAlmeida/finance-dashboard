@@ -75,7 +75,7 @@ export default function ClientsPage() {
   const hasFilter = search || filterCategory;
 
   return (
-    <main className="p-4 sm:ml-14 bg-gradient-to-r from-gray-50 to-gray-100">
+    <main className="p-4 sm:ml-14 bg-white">
       {/* Filtros */}
       <div className="flex flex-wrap gap-3 mb-4 items-center">
         <input

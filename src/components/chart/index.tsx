@@ -17,7 +17,7 @@ const chartConfig = {
 
 export default function Chart({ data = [] }: ChartProps) {
   return (
-    <Card className="w-full max-w-[600px] sm:w-1/2">
+    <Card className="w-full max-w-[600px] sm:w-1/2 bg-transparent">
       <CardHeader>
         <CardTitle>Gráfico de barras (Entradas/Saídas)</CardTitle>
         <CardDescription>comparativo de entradas/saídas por mês</CardDescription>

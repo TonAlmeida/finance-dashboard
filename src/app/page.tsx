@@ -9,8 +9,6 @@ import  PizzaChart from "@/components/pizzaChart";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Header } from "@/components/header";
 
-
-
 export default function App() {
   const [data, setData] = useState<ProcessedData | null>(null);
   const [showAlert, setShowAlert ] = useState<boolean>(false);
@@ -27,10 +25,10 @@ export default function App() {
   }, [])
 
   return data ? (
-    <main className="sm:ml-14 h-dvh p-4 bg-gradient-to-r from-gray-50 to-gray-300">
+    <main className="sm:ml-14 h-full p-4 bg-white text-[#6B6A3A]">
       <Header />
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4 mt-4">
-        <Card className="bg-gradient-to-r from-blue-900 to-blue-500 text-white">
+        <Card className="bg-gradient-to-r from-[#6B6A3A] to-[#e2e2d9] text-white">
           <CardHeader>
             <div className="flex items-center justify-center">
               <CardTitle className="text-lg sm:text-xl text-white select-none">Saldo Total</CardTitle>
@@ -46,7 +44,7 @@ export default function App() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-transparent">
           <CardHeader>
             <div className="flex items-center justify-center">
               <CardTitle className="text-lg sm:text-xl text-gray-700 select-none">Transações</CardTitle>
@@ -58,11 +56,11 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-base sm:text-lg font-bold">{data.dashboard.transactionsCount}</p>
+            <p className="text-base sm:text-lg font-bold">{data.dashboard.transactionsCount < 0 ? 0 : data.dashboard.transactionsCount}</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-transparent">
           <CardHeader>
             <div className="flex items-center justify-center">
               <CardTitle className="text-lg sm:text-xl text-gray-700 select-none">Entradas</CardTitle>
@@ -78,7 +76,7 @@ export default function App() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-transparent">
           <CardHeader>
             <div className="flex items-center justify-center">
               <CardTitle className="text-lg sm:text-xl text-gray-700 select-none">Saídas</CardTitle>
@@ -99,7 +97,6 @@ export default function App() {
         <Chart data={data.barChartData} />
         <PizzaChart data={data.pizzaChartData} />
       </section>
-
 
       {showAlert && 
         <Drawer open={showAlert} onOpenChange={setShowAlert}>

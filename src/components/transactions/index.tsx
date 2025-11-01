@@ -127,7 +127,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
   };
 
   return (
-    <section className="flex-1 bg-white shadow p-4 overflow-auto">
+    <section className="flex-1 shadow p-4 overflow-auto bg-moss text-olive">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
           <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
@@ -196,9 +196,9 @@ export default function Transactions({ data = [] }: TransactionsProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="border-b text-left bg-gray-600 text-gray-50">
+            <tr className="border-b text-left bg-[#6B6A3A] text-gray-50">
               <th 
-                className="p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors"
+                className="p-2 font-semibold cursor-pointer"
                 onClick={() => handleSort('date')}
               >
                 <div className="flex items-center gap-1">
@@ -207,7 +207,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                 </div>
               </th>
               <th 
-                className="p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors"
+                className="p-2 font-semibold cursor-pointer"
                 onClick={() => handleSort('description')}
               >
                 <div className="flex items-center gap-1 bg-gray">
@@ -216,7 +216,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                 </div>
               </th>
               <th 
-                className="hidden sm:flex p-2 font-semibold cursor-pointer hover:bg-gray-400 transition-colors"
+                className="hidden sm:flex p-2 font-semibold cursor-pointer"
                 onClick={() => handleSort('category')}
               >
                 <div className="flex items-center gap-1">
@@ -224,7 +224,7 @@ export default function Transactions({ data = [] }: TransactionsProps) {
                   {getSortIcon('category')}
                 </div>
               </th>
-              <th className="p-2 font-semibold text-right cursor-pointer hover:bg-gray-400 transition-colors"
+              <th className="p-2 font-semibold text-right cursor-pointer"
                   onClick={() => handleSort('value')}>
                 <div className="flex items-center justify-end gap-1">
                   Valor

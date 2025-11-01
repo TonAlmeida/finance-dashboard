@@ -86,7 +86,7 @@ export default function CategoryPieChart({
   };
 
   return (
-    <Card className="w-full max-w-[900px] sm:w-1/2 shadow-md border border-border">
+    <Card className="w-full max-w-[900px] sm:w-1/2 shadow-md border border-border bg-transparent">
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-semibold">{title}</CardTitle>
         <CardDescription className="text-xs text-muted-foreground">
