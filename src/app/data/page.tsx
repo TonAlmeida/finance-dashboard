@@ -117,17 +117,20 @@ export default function Data() {
 
                   <div>
                     <Label className="mb-2" htmlFor="date">Data</Label>
-                    <Input type="date" {...register("date")} />
+                    <Input id="date" type="date" {...register("date")} />
                     {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>}
                   </div>
 
                   <div>
-                    <Label className="mb-2" htmlFor="type">Tipo</Label>
+                    <Label htmlFor="type" className="mb-2">
+                    Tipo
+                    </Label>
                     <Select
+                      name="type"
                       onValueChange={(value) => setValue("type", value as "income" | "expense")}
                       value={watch("type") || "expense"}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger id="type">
                         <SelectValue placeholder="Selecione o tipo" />
                       </SelectTrigger>
                       <SelectContent>
@@ -135,33 +138,14 @@ export default function Data() {
                         <SelectItem value="expense">Despesa</SelectItem>
                       </SelectContent>
                     </Select>
+                    
                     {errors.type && <p className="text-red-500 text-sm mt-1">{errors.type.message}</p>}
                   </div>
 
-                  {/* Categoria */}
-                  <div>
-                    <Label className="mb-2" htmlFor="category">Categoria</Label>
-                    <Select
-                      onValueChange={(value) => setValue("category", value)}
-                      value={watch("category") || "Outros" }
-                    >
-
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione a categoria" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categoriesArray.map((cat) => (
-                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>}
-                  </div>
-
-                  {/* Valor */}
                   <div>
                     <Label className="mb-2" htmlFor="value">Valor</Label>
                     <Input
+                      id="value"
                       type="number"
                       step="1"
                       placeholder="0"
@@ -170,17 +154,40 @@ export default function Data() {
                     {errors.value && <p className="text-red-500 text-sm mt-1">{errors.value.message}</p>}
                   </div>
 
+                  <div>
+                    <Label className="mb-2" htmlFor="category">
+                      Categoria
+                    </Label>
+                    <Select
+                      name="category"
+                      onValueChange={(value) => setValue("category", value)}
+                      value={watch("category") || "Outros" }
+                    >
+
+                      <SelectTrigger id="category">
+                        <SelectValue placeholder="Selecione a categoria" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categoriesArray.map((cat) => (
+                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+          
+                    {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>}
+                  </div>                  
+
                   {/* Nome do Contraparte */}
                   <div className="col-span-2">
                     <Label className="mb-2" htmlFor="counterpartName">Nome do Contraparte</Label>
-                    <Input type="text" {...register("counterpartName")} />
+                    <Input id="counterpartName" type="text" {...register("counterpartName")} />
                     {errors.counterpartName && <p className="text-red-500 text-sm mt-1">{errors.counterpartName.message}</p>}
                   </div>
 
                   {/* Documento do Contraparte */}
                   <div className="col-span-2">
                     <Label className="mb-2" htmlFor="counterpartDocument">Documento do Contraparte (opcional)</Label>
-                    <Input type="text" {...register("counterpartDocument")} />
+                    <Input id="counterpartDocument" type="text" {...register("counterpartDocument")} />
                   </div>
 
                   {/* Botões */}
