@@ -25,7 +25,7 @@ export default function App() {
   }, [])
 
   return data ? (
-    <main className="sm:ml-14 h-full p-4 bg-white text-[#6B6A3A]">
+    <main className="h-full sm:ml-14 p-4 bg-white text-[#6B6A3A]">
       <Header />
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4 mt-4">
         <Card className="back">
@@ -93,7 +93,7 @@ export default function App() {
         </Card>
       </section>
 
-      <section className="mt-4 flex flex-col md:flex-row gap-4 h-96">
+      <section className="flex flex-col sm:flex-row mt-4 gap-4">
         <Chart data={data.barChartData} />
         <PizzaChart data={data.pizzaChartData} />
       </section>
@@ -121,6 +121,5 @@ export default function App() {
     <div className="ml-0 sm:ml-14 flex flex-col justify-center items-center max-w-full overflow-x-hidden">
       <div className="text-center">Nenhum dado para mostrar :(</div>
     </div>
-
   )
 }

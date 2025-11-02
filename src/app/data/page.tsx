@@ -87,7 +87,7 @@ export default function Data() {
     const categoriesArray = Array.from(Object.keys(categories));
 
     return (
-        <main className="sm:ml-14 p-4 bg-white h-dvh">
+        <main className="sm:ml-14 p-4 bg-white min-h-dvh">
           <div className={`opacity-0 absolute right-0 flex justify-end ${showAlert && 'opacity-100'}`}>
             <Alert className="max-w-lg bg-green-100">
               <CheckCircle2Icon />

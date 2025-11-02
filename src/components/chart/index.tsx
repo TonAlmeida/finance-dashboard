@@ -9,7 +9,6 @@ interface ChartProps {
 }
 
 export const description = "An area chart with a legend";
-
 const chartConfig = {
   income: { label: "income", color: "#4CAF50" },
   expenses: { label: "expenses", color: "#F44336"},

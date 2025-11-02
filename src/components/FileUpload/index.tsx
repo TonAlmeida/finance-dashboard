@@ -36,7 +36,7 @@ export default function FileUpload({ onDataProcessed, onError, onSucess }: FileU
 
   return (       
       <div className="flex justify-around items-center border-b-2 border-green-500 mb-4 py-4">
-        <h3>Importar arquivos CSVs</h3>
+        <h3 className='hidden sm:block'>Importar arquivos CSVs</h3>
         <input
           id='mainInput'
           type="file"

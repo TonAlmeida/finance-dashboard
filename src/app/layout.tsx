@@ -25,9 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="min-h-dvh">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-dvh overflow-x-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh overflow-x-hidden`}
       >
         <Sidebar />
         {children}
