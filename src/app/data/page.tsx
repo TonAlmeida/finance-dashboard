@@ -27,6 +27,7 @@ export default function Data() {
   const [error, setError] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
 
+
     useEffect(() => {
     const storedData = localStorage.getItem("data");
     if (storedData) {
@@ -113,12 +114,18 @@ export default function Data() {
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-4 space-y-4">
-                  {/* Tipo de Transação */}
+
                   <div>
-                    <Label htmlFor="type">Tipo</Label>
+                    <Label className="mb-2" htmlFor="date">Data</Label>
+                    <Input type="date" {...register("date")} />
+                    {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date.message}</p>}
+                  </div>
+
+                  <div>
+                    <Label className="mb-2" htmlFor="type">Tipo</Label>
                     <Select
-                      {...register("type")}
                       onValueChange={(value) => setValue("type", value as "income" | "expense")}
+                      value={watch("type") || "expense"}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione o tipo" />
@@ -133,11 +140,12 @@ export default function Data() {
 
                   {/* Categoria */}
                   <div>
-                    <Label htmlFor="category">Categoria</Label>
+                    <Label className="mb-2" htmlFor="category">Categoria</Label>
                     <Select
-                      {...register("category")}
                       onValueChange={(value) => setValue("category", value)}
+                      value={watch("category") || "Outros" }
                     >
+
                       <SelectTrigger>
                         <SelectValue placeholder="Selecione a categoria" />
                       </SelectTrigger>
@@ -152,7 +160,7 @@ export default function Data() {
 
                   {/* Valor */}
                   <div>
-                    <Label htmlFor="value">Valor</Label>
+                    <Label className="mb-2" htmlFor="value">Valor</Label>
                     <Input
                       type="number"
                       step="1"
@@ -164,14 +172,14 @@ export default function Data() {
 
                   {/* Nome do Contraparte */}
                   <div className="col-span-2">
-                    <Label htmlFor="counterpartName">Nome do Contraparte</Label>
+                    <Label className="mb-2" htmlFor="counterpartName">Nome do Contraparte</Label>
                     <Input type="text" {...register("counterpartName")} />
                     {errors.counterpartName && <p className="text-red-500 text-sm mt-1">{errors.counterpartName.message}</p>}
                   </div>
 
                   {/* Documento do Contraparte */}
                   <div className="col-span-2">
-                    <Label htmlFor="counterpartDocument">Documento do Contraparte (opcional)</Label>
+                    <Label className="mb-2" htmlFor="counterpartDocument">Documento do Contraparte (opcional)</Label>
                     <Input type="text" {...register("counterpartDocument")} />
                   </div>
 
