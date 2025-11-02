@@ -6,7 +6,16 @@ import { useEffect, useState } from "react";
 import { ProcessedData } from "@/types/processedData";
 import { formatValue } from "@/utils/formatValue"
 import  PizzaChart from "@/components/pizzaChart";
-import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerClose,
+} from "@/components/ui/drawer"
 import { Header } from "@/components/header";
 
 export default function App() {
@@ -118,8 +127,11 @@ export default function App() {
       }
     </main>
   ) : (
-    <div className="ml-0 sm:ml-14 flex flex-col justify-center items-center max-w-full overflow-x-hidden">
-      <div className="text-center">Nenhum dado para mostrar :(</div>
+    <main className="ml-0 sm:ml-14">
+    <Header />
+    <div className="flex flex-col justify-center items-center h-96">
+      <h1 className="text-center">Nenhum dado para mostrar :(</h1>
     </div>
+    </main>
   )
 }
