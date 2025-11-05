@@ -124,14 +124,14 @@ export default function ClientsPage() {
                 onClick={() => setSelectedClient(c)}
                 className="hover:bg-gray-50 cursor-pointer transition"
               >
-                <td className="hidden sm:flex px-4 py-2">
+                <td className="hidden  sm:flex px-4 py-2">
                   <Avatar>
                     <AvatarFallback>{c.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </td>
-                <td className="px-4 py-2 font-medium truncate w-full max-w-35 sm:max-w-90 text-xs sm:text-sm">{c.name}</td>
-                <td className="px-4 py-2 text-right font-semibold w-0.5">{c.transactions.length}</td>
-                <td className={`px-4 py-2 text-right font-semibold ${c.balance >= 0 ? "text-green-600" : "text-red-600"}`}>
+                <td className=" px-4 py-2 font-medium truncate w-full max-w-35 sm:max-w-90 text-xs sm:text-sm">{c.name}</td>
+                <td className=" px-4 py-2 text-right font-semibold w-0.5">{c.transactions.length}</td>
+                <td className={` px-4 py-2 text-right font-semibold ${c.balance >= 0 ? "text-green-600" : "text-red-600"}`}>
                   {formatValue(c.balance)}
                 </td>
               </tr>
@@ -176,7 +176,7 @@ export default function ClientsPage() {
                   </thead>
                   <tbody className="divide-y">
                     {selectedClient.transactions.map((t, i) => (
-                      <tr key={i} className="hover:bg-gray-50">
+                      <tr key={i} className="hover:bg-gray-50 flex justify-around items-center">
                         <td className="px-4 py-2 whitespace-nowrap">{new Date(t.date).toLocaleDateString()}</td>
                         <td className="px-4 py-2 truncate max-w-full">{t.description}</td>
                         <td className={`px-4 py-2 text-right font-semibold ${t.value >= 0 ? "text-green-600" : "text-red-600"}`}>

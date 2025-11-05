@@ -88,22 +88,21 @@ export default function Data() {
           date: new Date(data.date),
           description: `${data.type} - ${data.counterpartName} - ${data.counterpartDocument}`,
           type: data.type,
-          value: data.value,
+          value: data.type === "income" ? data.value : (data.value * -1),
         })
       }
       const transaction: NuTransactionData = trnasformTransactionIntoNuTransaction(data);
 
       try{
+        const test = transaction.type === "income";
         if(processedData) {
           setProcessedData({
             dashboard: {
-              balance: transaction.type === "income" ?
-                processedData.dashboard.balance += transaction.value :
-                processedData.dashboard.balance -= transaction.value,
-              totalExpenses: transaction.type === "expense" ?
-                (processedData.dashboard.totalExpenses -= transaction.value) :
+              balance: processedData.dashboard.balance += transaction.value,
+              totalExpenses: !test ?
+                processedData.dashboard.totalExpenses += Math.abs(transaction.value) :
                 processedData.dashboard.totalExpenses,
-              totalIncome: transaction.type === "income" ?
+              totalIncome: test ?
                 (processedData.dashboard.totalIncome += transaction.value) :
                 processedData.dashboard.totalIncome,
               transactionsCount: ++processedData.dashboard.transactionsCount,
@@ -115,9 +114,9 @@ export default function Data() {
         } else {
           setProcessedData({
             dashboard: {
-              balance: transaction.type === "income" ? transaction.value : (transaction.value * -1),
-              totalExpenses: transaction.type === "expense" ? transaction.value : 0,
-              totalIncome: transaction.type === "income" ? transaction.value : 0,
+              balance: transaction.value,
+              totalExpenses: !test ? transaction.value : 0,
+              totalIncome: test ? transaction.value : 0,
               transactionsCount: 1,
             },
             barChartData: [],
