@@ -106,7 +106,7 @@ export default function Data() {
               totalIncome: transaction.type === "income" ?
                 (processedData.dashboard.totalIncome += transaction.value) :
                 processedData.dashboard.totalIncome,
-              transactionsCount: processedData.dashboard.transactionsCount++,
+              transactionsCount: ++processedData.dashboard.transactionsCount,
             },
             barChartData: [],
             pizzaChartData: [],

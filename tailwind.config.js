@@ -12,6 +12,9 @@ module.exports = {
         olive: '#9D9B75',
         moss: '#6B6A3A',
       },
+      fontFamily: {
+        robotoMono: ['"Roboto Mono"', 'monospace'],
+      },
     },
   },
   plugins: [],

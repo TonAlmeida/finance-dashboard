@@ -49,7 +49,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className={`text-base sm:text-lg font-bold ${data.dashboard.balance > 0 ? 'text-green-200' : 'text-red-200'}`}>{formatValue(data.dashboard.balance)}</p>
+            <p className={`font-robotoMono sm:text-3xl font-bold ${data.dashboard.balance > 0 ? 'text-green-200' : 'text-red-200'}`}>{formatValue(data.dashboard.balance)}</p>
           </CardContent>
         </Card>
 
@@ -65,7 +65,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-base sm:text-lg font-bold">{data.dashboard.transactionsCount < 0 ? 0 : data.dashboard.transactionsCount}</p>
+            <p className="font-robotoMono sm:text-3xl font-bold">{data.dashboard.transactionsCount < 0 ? 0 : data.dashboard.transactionsCount}</p>
           </CardContent>
         </Card>
 
@@ -81,7 +81,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-green-700 sm:text-lg font-bold">{formatValue(data.dashboard.totalIncome)}</p>
+            <p className={`text-font-robotoMono sm:text-3xl font-semibold`}>{formatValue(data.dashboard.totalIncome)}</p>
           </CardContent>
         </Card>
 
@@ -97,7 +97,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-red-700 sm:text-lg font-bold">{formatValue(data.dashboard.totalExpenses)}</p>
+            <p className="texfont-robotoMono sm:text-3xl font-semibold">{formatValue(data.dashboard.totalExpenses)}</p>
           </CardContent>
         </Card>
       </section>
