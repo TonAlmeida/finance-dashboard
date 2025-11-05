@@ -91,23 +91,27 @@ export default function Data() {
           value: data.value,
         })
       }
-
       const transaction: NuTransactionData = trnasformTransactionIntoNuTransaction(data);
 
       try{
         if(processedData) {
           setProcessedData({
             dashboard: {
-              balance: processedData.dashboard.balance += transaction.value,
-              totalExpenses: processedData.dashboard.totalExpenses += transaction.value > 0 ? 0 : transaction.value,
-              totalIncome: processedData.dashboard.totalIncome += transaction.value > 0 ? transaction.value : 0,
+              balance: transaction.type === "income" ?
+                processedData.dashboard.balance += transaction.value :
+                processedData.dashboard.balance -= transaction.value,
+              totalExpenses: transaction.type === "expense" ?
+                (processedData.dashboard.totalExpenses -= transaction.value) :
+                processedData.dashboard.totalExpenses,
+              totalIncome: transaction.type === "income" ?
+                (processedData.dashboard.totalIncome += transaction.value) :
+                processedData.dashboard.totalIncome,
               transactionsCount: processedData.dashboard.transactionsCount++,
             },
             barChartData: [],
             pizzaChartData: [],
             transactions: [...processedData.transactions, transaction]
           })
-          console.log('onSubmit, setting the new transaction on the existing prossesedData', processedData)
         } else {
           setProcessedData({
             dashboard: {
@@ -120,10 +124,9 @@ export default function Data() {
             pizzaChartData: [],
             transactions: [transaction],
           })
-          console.log('onSubmit, setting the new transaction to a new prossesedData', processedData)
         }
       } catch(e) {
-        console.log('Deu erro ao tentar salvar a nova transação', e);
+        console.log('Erro ao tentar salvar a nova transação', e);
       }
 
       toast.success("Transação salva com sucesso!");
