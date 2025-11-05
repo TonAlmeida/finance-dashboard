@@ -115,9 +115,9 @@ export default function Data() {
         } else {
           setProcessedData({
             dashboard: {
-              balance: transaction.value,
-              totalExpenses: transaction.value > 0 ? 0 : transaction.value,
-              totalIncome: transaction.value > 0 ? transaction.value : 0,
+              balance: transaction.type === "income" ? transaction.value : (transaction.value * -1),
+              totalExpenses: transaction.type === "expense" ? transaction.value : 0,
+              totalIncome: transaction.type === "income" ? transaction.value : 0,
               transactionsCount: 1,
             },
             barChartData: [],
