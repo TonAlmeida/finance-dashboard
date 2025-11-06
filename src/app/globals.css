@@ -144,7 +144,7 @@
 
 /* my css */
 .selected {
-  background-color: green;
+  background-color: rgb(23, 59, 1);
   color: white;;
 }
 
@@ -158,6 +158,6 @@
 }
 
 .back {
-  background-color: rgb(26, 68, 1);
+  background-color: rgb(13, 34, 1);
   color: white;
 }
