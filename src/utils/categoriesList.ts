@@ -1,54 +1,146 @@
 export const categories: Record<string, string[]> = {
-                "Tabacaria": [
-                    "tabacaria", "vape", "narguile", "fumo", "cigarro", "hookah", "charuto", "cachimbo",
-                    "essência", "vaporizador", "smoke shop", "tobacco", "fumo eletrônico", "cigarros"
-                ],
-                "Mercado": [
-                    "mercado", "supermercado", "carrefour", "extra", "atacadao", "hiper", "pão de açúcar", "bompreço",
-                    "mercantil", "minimercado", "h&b", "zonamix", "bazaar", "super", "conveniência"
-                ],
-                "Restaurante": [
-                    "restaurante", "lanchonete", "burguer", "pizzaria", "bk", "mcdonald", "ifood", "food", "delivery",
-                    "fast food", "pizza", "hamburguer", "sanduiche", "comida", "jantar", "almoço", "lanche"
-                ],
-                "Transporte": [
-                    "uber", "99", "cabify", "onibus", "metrô", "metro", "trem", "lotação", "ônibus", "taxi", "rodoviária",
-                    "bilhete", "transporte", "passagem", "combustível transporte", "vias"
-                ],
-                "Entretenimento": [
-                    "cinema", "netflix", "spotify", "ingresso", "show", "evento", "teatro", "musical", "livraria",
-                    "game", "jogos", "associação cultural", "assinatura", "streaming", "ingressos", "cinematográfica"
-                ],
-                "Farmácia": [
-                    "farmacia", "droga", "raia", "pacheco", "panvel", "medicamento", "remédio", "drogaria", 
-                    "saúde", "saúde +", "botica", "ortopedia", "dermatologia"
-                ],
-                "Posto": [
-                    "posto", "gasolina", "diesel", "etanol", "combustível", "gas", "fuel", "bomba", "posto de gasolina",
-                    "abastecimento", "carburante", "lubrificante", "óleo"
-                ],
-                "Vestuário": [
-                    "roupa", "moda", "sapato", "renner", "riachuelo", "cea", "vestido", "camisa", "calça", "blusa",
-                    "tênis", "boné", "casaco", "jeans", "moda feminina", "moda masculina", "acessório", "bolsa"
-                ],
-                "Tecnologia": [
-                    "apple", "google", "amazon", "eletronico", "celular", "notebook", "tablet", "pc", "computador",
-                    "smartphone", "hardware", "software", "tecnologia", "gadgets", "smartwatch", "monitor",
-                    "impressora", "periférico"
-                ],
-                "Educação": [
-                    "curso", "faculdade", "escola", "ead", "universidade", "ensino", "professor", "educação", "instituto",
-                    "academia", "seminário", "treinamento", "curso online", "ensino superior", "aperfeiçoamento",
-                    "formação"
-                ],
-                "Saúde": [
-                    "clinica", "hospital", "dentista", "exame", "laboratorio", "saúde", "checkup", "psicólogo", "nutricionista",
-                    "oftalmologista", "ortopedista", "ginecologista", "fisioterapia", "atendimento médico",
-                    "urgência", "pronto socorro"
-                ],
-                "Outros": [
-                    "taxa", "serviço", "assinatura", "doação", "presente", "cartão", "boleto", "multas", "imposto", 
-                    "diversos", "misc", "comissão", "frete", "correios", "pagamento", "transferência", "transfer", 
-                    "depósito", "recarga", "outros"
-                ]
-            };
+  // 💰 Receitas
+  "Salário / Proventos": [
+    "salário", "pagamento", "provento", "renda", "remuneração", "ganho",
+    "trabalho", "holerite", "contracheque", "adicional", "comissão", "hora extra"
+  ],
+  "Investimentos / Rendimentos": [
+    "investimento", "dividendo", "rendimento", "juros", "tesouro direto", "cdb",
+    "fundos", "ações", "poupança", "renda fixa", "cripto", "bitcoin", "ethereum",
+    "pix recebido", "lucro", "retorno", "proventos"
+  ],
+  "Transferências Recebidas": [
+    "transferência recebida", "pix recebido", "depósito", "transfer", "cashback", "presente em dinheiro"
+  ],
+
+  // 🛒 Despesas gerais
+  "Mercado / Supermercado": [
+    "mercado", "supermercado", "carrefour", "atacadão", "pão de açúcar", "hiper", "extra",
+    "mercantil", "minimercado", "conveniência", "compras", "feira", "hortifruti"
+  ],
+  "Alimentação / Restaurante": [
+    "restaurante", "lanchonete", "hamburguer", "pizzaria", "bk", "mcdonald", "ifood",
+    "delivery", "sanduíche", "almoço", "jantar", "lanche", "comida", "fast food",
+    "burguer king", "habibs", "bob's", "subway"
+  ],
+  "Bebidas / Tabacaria": [
+    "tabacaria", "vape", "narguile", "fumo", "cigarro", "bebida", "bar", "cerveja", "vinho",
+    "vodka", "whisky", "destilado", "drink", "balada", "noite", "boteco", "cachimbo"
+  ],
+
+  // 🧾 Contas e serviços
+  "Serviços Domésticos": [
+    "água", "energia", "luz", "conta de água", "conta de luz", "sabesp", "copasa",
+    "enel", "neoenergia", "coelba", "limpeza", "faxina", "condomínio"
+  ],
+  "Telefone / Internet / TV": [
+    "telefone", "internet", "claro", "vivo", "tim", "oi", "tv", "net", "sky", "streaming",
+    "plano", "wi-fi", "celular", "recarga", "assinatura"
+  ],
+  "Aluguel / Moradia": [
+    "aluguel", "locação", "apartamento", "casa", "condomínio", "imobiliária", "airbnb",
+    "hospedagem", "pousada", "resort", "hotel", "hospedagem temporária"
+  ],
+  "Manutenção / Reforma": [
+    "construção", "reforma", "tinta", "cimento", "ferramenta", "obra", "encanador",
+    "eletricista", "material de construção", "móveis", "decoração", "lar"
+  ],
+
+  // 🚗 Transporte e veículo
+  "Transporte / Mobilidade": [
+    "uber", "99", "cabify", "ônibus", "metrô", "trem", "taxi", "rodoviária", "bilhete único",
+    "transporte", "carona", "passagem"
+  ],
+  "Combustível / Posto": [
+    "posto", "gasolina", "etanol", "diesel", "abastecimento", "combustível", "fuel",
+    "lubrificante", "óleo", "shell", "ipiranga", "br"
+  ],
+  "Veículo / Manutenção": [
+    "carro", "moto", "oficina", "autopeças", "lavagem", "seguro veicular", "licenciamento",
+    "ipva", "rodízio", "manutenção automotiva", "reparo"
+  ],
+
+  // 🧍‍♂️ Pessoais
+  "Vestuário / Moda": [
+    "roupa", "sapato", "renner", "riachuelo", "cea", "marisa", "blusa", "camisa",
+    "calça", "vestido", "tênis", "bolsa", "acessório", "moda", "chuteira", "óculos"
+  ],
+  "Beleza / Estética": [
+    "salão", "barbearia", "cabelo", "manicure", "pedicure", "maquiagem", "perfume",
+    "cosmético", "skincare", "tratamento", "spa", "massagem"
+  ],
+  "Saúde / Farmácia": [
+    "farmácia", "remédio", "droga", "raia", "pacheco", "exame", "consulta", "hospital",
+    "dentista", "clínica", "laboratório", "nutricionista", "psicólogo", "saúde"
+  ],
+  "Educação / Cursos": [
+    "curso", "faculdade", "escola", "universidade", "ensino", "professor", "ead",
+    "treinamento", "formação", "certificação", "apostila", "curso online"
+  ],
+  "Academia / Esportes": [
+    "academia", "treino", "crossfit", "musculação", "pilates", "dança", "aula de luta",
+    "jiu-jitsu", "karatê", "futebol", "basquete", "esporte", "corrida"
+  ],
+
+  // 💼 Trabalho e negócios
+  "Serviços / Freelance": [
+    "serviço", "freela", "freelancer", "autônomo", "prestação de serviço", "contrato",
+    "consultoria", "design", "programação", "projeto"
+  ],
+  "Empreendimento / Negócios": [
+    "empresa", "negócio", "empreendimento", "venda", "compra", "fornecedor", "cliente",
+    "parceiro", "revenda", "lojista", "estoque"
+  ],
+
+  // 💳 Financeiros
+  "Serviços Financeiros": [
+    "banco", "cartão", "empréstimo", "financiamento", "juros", "parcelamento", "taxa",
+    "tarifa", "conta", "pix", "transferência", "boleto", "pagamento", "itau", "nubank",
+    "bradesco", "santander", "bb", "caixa", "inter", "c6", "neon"
+  ],
+  "Seguros": [
+    "seguro", "vida", "automóvel", "residencial", "patrimonial", "plano de saúde",
+    "proteção", "assistência", "corretora", "bradesco seguros"
+  ],
+  "Impostos / Taxas": [
+    "imposto", "iptu", "ipva", "tarifa", "taxa", "multa", "contribuição", "inss",
+    "darf", "irpf", "licença"
+  ],
+
+  // 🎮 Lazer e entretenimento
+  "Entretenimento / Assinaturas": [
+    "cinema", "show", "ingresso", "evento", "teatro", "netflix", "spotify", "youtube premium",
+    "disney+", "hbo", "prime video", "jogo", "game", "playstation", "xbox", "assinatura"
+  ],
+  "Viagem / Lazer": [
+    "viagem", "turismo", "passagem aérea", "hotel", "pousada", "resort", "excursão",
+    "airbnb", "trip", "hospedagem", "passeio", "tour", "lazer"
+  ],
+  "Presentes / Doações": [
+    "presente", "aniversário", "doação", "caridade", "ajuda", "oferta", "brinde", "lembrança"
+  ],
+
+  // 💻 Tecnologia e eletrônicos
+  "Tecnologia / Eletrônicos": [
+    "eletrônico", "apple", "google", "amazon", "notebook", "computador", "smartphone",
+    "tablet", "hardware", "software", "impressora", "celular", "periférico", "tecnologia",
+    "smartwatch", "fone de ouvido", "gadget"
+  ],
+  "Eletrodomésticos / Casa": [
+    "geladeira", "fogão", "microondas", "máquina de lavar", "ventilador", "televisão",
+    "tv", "cafeteira", "liquidificador", "aspirador", "doméstico", "eletrodoméstico"
+  ],
+
+  // 🧳 Outros
+  "Animais / Pets": [
+    "pet", "cachorro", "gato", "ração", "veterinário", "petshop", "banho e tosa", "acessórios pet"
+  ],
+  "Filhos / Família": [
+    "criança", "filho", "escola infantil", "brinquedo", "berçário", "creche", "maternal",
+    "roupas infantis", "pais", "família"
+  ],
+  "Outros": [
+    "outros", "diversos", "desconhecido", "sem categoria", "gasto não identificado",
+    "misc", "variedades", "geral"
+  ]
+};

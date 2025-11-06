@@ -20,7 +20,6 @@ import { CheckCircle2Icon } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
 import { NuTransactionData } from "@/types/NuTransactionData";
 import { generateBarChartData, generatePizzaChartData } from "@/utils/chartDataGenerator"
-import { BarChartData } from "@/types/barChartData";
 
 type TransactionFormData = z.infer<typeof transactionSchema>;
 
