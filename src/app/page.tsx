@@ -97,7 +97,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="texfont-robotoMono sm:text-3xl font-semibold">{formatValue(data.dashboard.totalExpenses)}</p>
+            <p className="texfont-robotoMono sm:text-3xl font-semibold">-{formatValue(data.dashboard.totalExpenses)}</p>
           </CardContent>
         </Card>
       </section>

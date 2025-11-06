@@ -19,6 +19,8 @@ import { transactionSchema } from "@/utils/transactionSchema";
 import { CheckCircle2Icon } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
 import { NuTransactionData } from "@/types/NuTransactionData";
+import { generateBarChartData, generatePizzaChartData } from "@/utils/chartDataGenerator"
+import { BarChartData } from "@/types/barChartData";
 
 type TransactionFormData = z.infer<typeof transactionSchema>;
 
@@ -95,6 +97,11 @@ export default function Data() {
 
       try{
         const test = transaction.type === "income";
+        const newTransactionBar = generateBarChartData([transaction]);
+        const newTransactionPizza = generatePizzaChartData([transaction]);
+        const bar = processedData && [...processedData.barChartData, ...newTransactionBar];
+        const pizza = processedData && [...processedData.pizzaChartData, ...newTransactionPizza];
+        
         if(processedData) {
           setProcessedData({
             dashboard: {
@@ -107,20 +114,20 @@ export default function Data() {
                 processedData.dashboard.totalIncome,
               transactionsCount: ++processedData.dashboard.transactionsCount,
             },
-            barChartData: [],
-            pizzaChartData: [],
+            barChartData: bar || [],
+            pizzaChartData: pizza || [],
             transactions: [...processedData.transactions, transaction]
           })
         } else {
           setProcessedData({
             dashboard: {
               balance: transaction.value,
-              totalExpenses: !test ? transaction.value : 0,
+              totalExpenses: !test ? (transaction.value * -1) : 0,
               totalIncome: test ? transaction.value : 0,
               transactionsCount: 1,
             },
-            barChartData: [],
-            pizzaChartData: [],
+            barChartData: generateBarChartData([transaction]),
+            pizzaChartData: generatePizzaChartData([transaction]),
             transactions: [transaction],
           })
         }
