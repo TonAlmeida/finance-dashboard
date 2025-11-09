@@ -26,6 +26,8 @@ export default function Data() {
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const categoriesArray = Array.from(Object.keys(categories));
   const dashboard = generateDashboardData(transactionsData ?? []);
+  const [displayValue, setDisplayValue] = useState("0,00"); 
+
 
     const handleSucess = () => {//parameter of FileUpload
       setShowAlert(true);
@@ -139,29 +141,23 @@ export default function Data() {
                       name="value"
                       control={control}
                       render={({ field: { value, onChange } }) => {
-                        const [displayValue, setDisplayValue] = React.useState(
-                          formatInputValue(value ?? 0)
-                        );
 
                         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                           const raw = e.target.value;
 
-                          // update the text in the input
-                          setDisplayValue(raw);
+                          setDisplayValue(raw); // atualiza texto
 
-                          // regex to extract only numbers and commas
                           const cleaned = raw.replace(/[^\d,]/g, "").replace(",", ".");
                           const numericValue = parseFloat(cleaned);
 
                           if (!isNaN(numericValue)) {
-                            onChange(numericValue); // send the number to the form
+                            onChange(numericValue); // envia o número pro form
                           } else {
                             onChange(0);
                           }
                         };
 
                         const handleBlur = () => {
-                          // when left the input the formatting is applied
                           setDisplayValue(formatInputValue(value ?? 0));
                         };
 
@@ -184,6 +180,7 @@ export default function Data() {
                         );
                       }}
                     />
+
                   </div>
 
                   <div>
