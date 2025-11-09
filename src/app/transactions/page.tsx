@@ -15,7 +15,7 @@ export default function Orders() {
 
     return transactionsData && transactionsData?.length > 0 ? (
         <main className="sm:ml-14 bg-gradient-to-r from-gray-50 to-gray-300">
-            <Transactions data={transactionsData}/>
+            <Transactions />
         </main>
     ) : (
       <main className="sm:ml-14">

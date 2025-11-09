@@ -9,28 +9,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { categories } from "@/utils/categoriesList";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Header } from "@/components/header";
 import { formatValue, formatInputValue, generateDashboardData } from "@/utils/formatValue";
 import { transactionSchema } from "@/utils/transactionSchema";
 import { CheckCircle2Icon } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
-import { NuTransactionData } from "@/types/TransactionData";
+import { TransactionData } from "@/types/TransactionData";
 import { useTransitions } from "@/contexts/transactionsContext"
 
 type TransactionFormData = z.infer<typeof transactionSchema>;
 
 export default function Data() {
   const { transactionsData, setTransactionsData } = useTransitions();
-  const [error, setError] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const categoriesArray = Array.from(Object.keys(categories));
   const dashboard = generateDashboardData(transactionsData ?? []);
-
-    useEffect(() => {//just to show when an error occors
-      console.log(error)
-    }, [error])
 
     const handleSucess = () => {//parameter of FileUpload
       setShowAlert(true);
@@ -40,7 +35,7 @@ export default function Data() {
     }
 
     const onSubmit = (data: TransactionFormData) => {
-      function trnasformTransactionIntoNuTransaction(data: TransactionFormData): NuTransactionData {
+      function trnasformTransactionIntoNuTransaction(data: TransactionFormData): TransactionData {
         return ({
           id: data.date + data.type + data.counterpartName + data.counterpartDocument,
           category: data.category,
@@ -52,11 +47,9 @@ export default function Data() {
           value: data.type === "income" ? data.value : (data.value * -1),
         })
       }
-      const transaction: NuTransactionData = trnasformTransactionIntoNuTransaction(data);
+      const transaction: TransactionData = trnasformTransactionIntoNuTransaction(data);
 
-      try{
-        const test = transaction.type === "income";
-        
+      try{        
         if(transactionsData) {
           setTransactionsData([ ...transactionsData, transaction ]);
         } else {

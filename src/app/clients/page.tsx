@@ -16,7 +16,7 @@ type ClientGroup = {
 };
 
 export default function ClientsPage() {
-  const { transactionsData, setTransactionsData } = useTransitions();
+  const { transactionsData } = useTransitions();
   const [clients, setClients] = useState<ClientGroup[]>([]);
   const [search, setSearch] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
@@ -29,7 +29,7 @@ export default function ClientsPage() {
      try {
     const grouped: Record<string, ClientGroup> = {};
 
-    transactionsData && transactionsData.forEach(tx => {
+    if(transactionsData) transactionsData.forEach(tx => {
       const name = tx.counterpartName?.trim() || "Desconhecido";
       const doc = tx.counterpartDocument || "Sem Documento";
       const key = `${normalizeText(name)}-${doc}`;
@@ -51,7 +51,7 @@ export default function ClientsPage() {
   } catch (err) {
     console.error("Erro ao processar dados:", err);
   }
-  }, [])
+  }, [transactionsData])
 
   // Todas as categorias únicas
   const allCategories = useMemo(() => {

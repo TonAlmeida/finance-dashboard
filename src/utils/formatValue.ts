@@ -1,4 +1,4 @@
-import { NuTransactionData } from "@/types/TransactionData";
+import { TransactionData } from "@/types/TransactionData";
 
 export function formatValue(value: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -10,7 +10,7 @@ export function formatInputValue(value: number): string {
     .replace(/^0+(?=\d)/, ""); // remove zeros à esquerda
 }
 
-export function generateDashboardData(transactions: NuTransactionData[]) {
+export function generateDashboardData(transactions: TransactionData[]) {
   const { balance, totalIncome, totalExpenses } = transactions.reduce((acc, transaction) => {
             const value = transaction.value;
 
