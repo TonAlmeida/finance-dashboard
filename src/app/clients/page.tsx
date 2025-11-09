@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { formatValue } from "@/utils/formatValue";
 import { NuTransactionData } from "@/types/NuTransactionData";
 import { BadgeDollarSign, DollarSign } from "lucide-react";
+import { useTransitions } from "@/contexts/transactionsContext";
 
 type ClientGroup = {
   document: string;
@@ -15,6 +16,7 @@ type ClientGroup = {
 };
 
 export default function ClientsPage() {
+  const { transactionsData, setTransactionsData } = useTransitions();
   const [clients, setClients] = useState<ClientGroup[]>([]);
   const [search, setSearch] = useState("");
   const [filterCategory, setFilterCategory] = useState("");
@@ -23,38 +25,33 @@ export default function ClientsPage() {
   const normalizeText = (text: string) =>
     text?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim() || "";
 
-  // Agrupamento correto por nome+documento
-  useEffect(() => {
-    const stored = localStorage.getItem("data");
-    if (!stored) return;
+  useEffect(() => { //setting clients data
+     try {
+    const grouped: Record<string, ClientGroup> = {};
 
-    try {
-      const parsed: { transactions: NuTransactionData[] } = JSON.parse(stored);
-      const grouped: Record<string, ClientGroup> = {};
+    transactionsData && transactionsData.forEach(tx => {
+      const name = tx.counterpartName?.trim() || "Desconhecido";
+      const doc = tx.counterpartDocument || "Sem Documento";
+      const key = `${normalizeText(name)}-${doc}`;
 
-      parsed.transactions.forEach(tx => {
-        const name = tx.counterpartName?.trim() || "Desconhecido";
-        const doc = tx.counterpartDocument || "Sem Documento";
-        const key = `${normalizeText(name)}-${doc}`;
+      if (!grouped[key]) {
+        grouped[key] = {
+          document: doc,
+          name,
+          transactions: [],
+          balance: 0,
+        };
+      }
 
-        if (!grouped[key]) {
-          grouped[key] = {
-            document: doc,
-            name,
-            transactions: [],
-            balance: 0,
-          };
-        }
+      grouped[key].transactions.push(tx);
+      grouped[key].balance += tx.value;
+    });
 
-        grouped[key].transactions.push(tx);
-        grouped[key].balance += tx.value;
-      });
-
-      setClients(Object.values(grouped));
-    } catch (err) {
-      console.error("Erro ao processar dados:", err);
-    }
-  }, []);
+    setClients(Object.values(grouped));
+  } catch (err) {
+    console.error("Erro ao processar dados:", err);
+  }
+  }, [])
 
   // Todas as categorias únicas
   const allCategories = useMemo(() => {

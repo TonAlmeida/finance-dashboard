@@ -1,17 +1,14 @@
-'use client';
-
 import { useState } from 'react';
-import { NuCsvProcessor } from '@/utils/NuCsvProcessor'; 
-import { ProcessedData } from '@/types/processedData';
-import { Card } from '../ui/card';
+import { NuCsvProcessor } from '@/utils/NuCsvProcessor';
+import { NuTransactionData } from '@/types/NuTransactionData';
 
 interface FileUploadProps {
-  onDataProcessed: (data: ProcessedData) => void;
-  onError: (error: string) => void;
+  transactions: NuTransactionData[];
+  setTransactions: React.Dispatch<React.SetStateAction<NuTransactionData[] | null>>;
   onSucess?: () => void;
 }
 
-export default function FileUpload({ onDataProcessed, onError, onSucess }: FileUploadProps) {
+export default function FileUpload({ transactions, setTransactions, onSucess }: FileUploadProps) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,13 +19,11 @@ export default function FileUpload({ onDataProcessed, onError, onSucess }: FileU
 
     try {
       const fileArray = Array.from(files);
-      const processedData = await NuCsvProcessor.processData(fileArray);
-      onDataProcessed(processedData);
-      if(processedData) localStorage.setItem("data", JSON.stringify(processedData))
+      const trasactionsData = await NuCsvProcessor.processData(fileArray);
+      setTransactions(trasactionsData ?? []);
       onSucess?.();
-    } catch (error) {
-      onError(error instanceof Error ? error.message : 'Erro ao processar arquivos');
-      console.log(error);
+    } catch (erro) {
+      console.log('Erro ao processar arquivos', erro);
     } finally {
       setIsProcessing(false);
     }

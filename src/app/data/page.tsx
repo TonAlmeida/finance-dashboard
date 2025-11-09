@@ -10,67 +10,27 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { categories } from "@/utils/categoriesList";
 import React, { useEffect, useState } from "react";
-import { ProcessedData } from "@/types/processedData";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Header } from "@/components/header";
-import { DashboardData } from "@/types/dashboardData";
-import { formatValue, formatInputValue } from "@/utils/formatValue";
+import { formatValue, formatInputValue, generateDashboardData } from "@/utils/formatValue";
 import { transactionSchema } from "@/utils/transactionSchema";
 import { CheckCircle2Icon } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
 import { NuTransactionData } from "@/types/NuTransactionData";
-import { generateBarChartData, generatePizzaChartData } from "@/utils/chartDataGenerator"
+import { useTransitions } from "@/contexts/transactionsContext"
 
 type TransactionFormData = z.infer<typeof transactionSchema>;
 
 export default function Data() {
-  const [processedData, setProcessedData] = useState<ProcessedData | null>(null);
+  const { transactionsData, setTransactionsData } = useTransitions();
   const [error, setError] = useState<string>('');
   const [showAlert, setShowAlert] = useState<boolean>(false);
-  const defaultDashboardData: DashboardData = {
-      balance: 0,
-      totalExpenses: 0,
-      totalIncome: 0,
-      transactionsCount: 0
-    }
-  const dashboard: DashboardData = processedData?.dashboard ?? defaultDashboardData;
   const categoriesArray = Array.from(Object.keys(categories));
-
-    useEffect(() => { //get the data from localstorage
-    const storedData = localStorage.getItem("data");
-    if (storedData) {
-        try {
-        setProcessedData(JSON.parse(storedData));
-        } catch (e) {
-          console.error("Erro ao parsear o localStorage", e);
-        }
-    }
-    }, []);
-
-    useEffect(() => { //when the data change, set to the localstorage
-      console.log("onChange do processedData", processedData)
-      try {
-        if(processedData) {
-          localStorage.setItem("data", JSON.stringify(processedData));
-        }
-      } catch(e) {
-        console.log("deu erro ao passar os dados para o local storage", e)
-      }
-    }, [processedData])
+  const dashboard = generateDashboardData(transactionsData ?? []);
 
     useEffect(() => {//just to show when an error occors
       console.log(error)
     }, [error])
-
-    const handleData = (data: ProcessedData) => {//parameter of FileUpload
-      setProcessedData(data);
-      setError('');
-    }
-
-    const handleError = (e: string) => {//parameter of FileUpload
-      setError(e);
-      setProcessedData(null);
-    }
 
     const handleSucess = () => {//parameter of FileUpload
       setShowAlert(true);
@@ -96,39 +56,11 @@ export default function Data() {
 
       try{
         const test = transaction.type === "income";
-        const newTransactionBar = generateBarChartData([transaction]);
-        const newTransactionPizza = generatePizzaChartData([transaction]);
-        const bar = processedData && [...processedData.barChartData, ...newTransactionBar];
-        const pizza = processedData && [...processedData.pizzaChartData, ...newTransactionPizza];
         
-        if(processedData) {
-          setProcessedData({
-            dashboard: {
-              balance: processedData.dashboard.balance += transaction.value,
-              totalExpenses: !test ?
-                processedData.dashboard.totalExpenses += Math.abs(transaction.value) :
-                processedData.dashboard.totalExpenses,
-              totalIncome: test ?
-                (processedData.dashboard.totalIncome += transaction.value) :
-                processedData.dashboard.totalIncome,
-              transactionsCount: ++processedData.dashboard.transactionsCount,
-            },
-            barChartData: bar || [],
-            pizzaChartData: pizza || [],
-            transactions: [...processedData.transactions, transaction]
-          })
+        if(transactionsData) {
+          setTransactionsData([ ...transactionsData, transaction ]);
         } else {
-          setProcessedData({
-            dashboard: {
-              balance: transaction.value,
-              totalExpenses: !test ? (transaction.value * -1) : 0,
-              totalIncome: test ? transaction.value : 0,
-              transactionsCount: 1,
-            },
-            barChartData: generateBarChartData([transaction]),
-            pizzaChartData: generatePizzaChartData([transaction]),
-            transactions: [transaction],
-          })
+          setTransactionsData([transaction]);
         }
       } catch(e) {
         console.log('Erro ao tentar salvar a nova transação', e);
@@ -156,7 +88,7 @@ export default function Data() {
               <CheckCircle2Icon />
               <AlertTitle>Sucesso! upload de arquivos bem sucedido</AlertTitle>
               <AlertDescription>
-                foram importados {dashboard.transactionsCount} transações, totalizando {formatValue(dashboard.totalIncome)} recebidos,
+                foram importados {transactionsData?.length} transações, totalizando {formatValue(dashboard.totalIncome)} recebidos,
                 {formatValue(dashboard.totalExpenses)} gastos, com um balanço total de {formatValue(dashboard.balance)}
               </AlertDescription>
             </Alert>
@@ -168,7 +100,7 @@ export default function Data() {
             <div className="flex w-full justify-center mt-6">
               <Card className="w-full max-w-xl">
 
-                <FileUpload onDataProcessed={handleData} onError={handleError} onSucess={handleSucess} />
+                <FileUpload transactions={transactionsData ?? []} setTransactions={setTransactionsData}  onSucess={handleSucess} />
 
               <CardHeader>
                 <CardTitle>

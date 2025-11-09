@@ -1,12 +1,9 @@
 
-import { DashboardData } from "@/types/dashboardData";
 import { NuTransactionData } from "@/types/NuTransactionData";
-import { ProcessedData } from "@/types/processedData";
 import { categories } from "@/utils/categoriesList";
-import { generateBarChartData, generatePizzaChartData } from "@/utils/chartDataGenerator"
  
 export class NuCsvProcessor {
-    static processData (files: File[]): Promise<ProcessedData> {
+    static processData (files: File[]): Promise<NuTransactionData[]> {
         return new Promise (async (resolve, reject) => {
             try {
                 if(!files || files.length === 0) {
@@ -23,19 +20,14 @@ export class NuCsvProcessor {
                     allTransactions.push(...transactions);
                 }
 
-                //gerando ChartData
-                const barChartData = generateBarChartData(allTransactions);
-                const pizzaChartData = generatePizzaChartData(allTransactions);
-
                 //gerando dashboardData
                 const dashboard = this.generateDashboardData(allTransactions);
 
-                resolve({
-                        dashboard,
-                        barChartData,
-                        pizzaChartData,
-                        transactions: allTransactions
-                });
+                if(allTransactions) {
+                    resolve(allTransactions);
+                } else {
+                    resolve([]);
+                }
             } catch(e) {
                 alert("erro de processamento" + e)
                 console.log("deu erro no processamento" + e);
@@ -111,7 +103,7 @@ export class NuCsvProcessor {
         });
     }
 
-    private static generateDashboardData(transactions: NuTransactionData[]): DashboardData {
+    private static generateDashboardData(transactions: NuTransactionData[]) {
         const { balance, totalIncome, totalExpenses } = transactions.reduce((acc, transaction) => {
             const value = transaction.value;
 

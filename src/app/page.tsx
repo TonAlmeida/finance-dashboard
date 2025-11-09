@@ -3,8 +3,7 @@ import Chart from "@/components/chart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { BadgeDollarSign, CheckIcon, DollarSign, Percent, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-import { ProcessedData } from "@/types/processedData";
-import { formatValue } from "@/utils/formatValue"
+import { formatValue, generateDashboardData } from "@/utils/formatValue"
 import  PizzaChart from "@/components/pizzaChart";
 import {
   Drawer,
@@ -17,23 +16,21 @@ import {
   DrawerClose,
 } from "@/components/ui/drawer"
 import { Header } from "@/components/header";
+import { useTransitions } from "@/contexts/transactionsContext";
+import { generateBarChartData, generatePizzaChartData } from "@/utils/chartDataGenerator"
 
 export default function App() {
-  const [data, setData] = useState<ProcessedData | null>(null);
+  const { transactionsData, setTransactionsData } = useTransitions();
   const [showAlert, setShowAlert ] = useState<boolean>(false);
-  
-  useEffect(() => {
-    const dataFromStorage = localStorage.getItem("data");
-    try{
-      const parsedData = dataFromStorage && JSON.parse(dataFromStorage);
-      setData(parsedData);
-      setShowAlert(true);
-    } catch (e) {
-      console.log("erro no parse", e);
-    }
-  }, [])
+  const dashboard = generateDashboardData(transactionsData ?? []);
+  const barChartData = generateBarChartData(transactionsData ?? []);
+  const pizzaChartData = generatePizzaChartData(transactionsData ?? []);
 
-  return data ? (
+  useEffect(() => {
+    transactionsData && setShowAlert(true);
+  }, []);
+
+  return (dashboard && transactionsData) ? (
     <main className="h-full sm:ml-14 p-4 bg-white text-[#6B6A3A]">
       <Header />
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4 mt-4">
@@ -49,7 +46,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className={`font-robotoMono sm:text-3xl font-bold ${data.dashboard.balance > 0 ? 'text-green-200' : 'text-red-200'}`}>{formatValue(data.dashboard.balance)}</p>
+            <p className={`font-robotoMono sm:text-3xl font-bold ${dashboard.balance > 0 ? 'text-green-200' : 'text-red-200'}`}>{formatValue(dashboard.balance)}</p>
           </CardContent>
         </Card>
 
@@ -65,7 +62,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="font-robotoMono sm:text-3xl font-bold">{data.dashboard.transactionsCount < 0 ? 0 : data.dashboard.transactionsCount}</p>
+            <p className="font-robotoMono sm:text-3xl font-bold">{transactionsData.length < 0 ? 0 : transactionsData.length}</p>
           </CardContent>
         </Card>
 
@@ -81,7 +78,7 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className={`text-font-robotoMono sm:text-3xl font-semibold`}>{formatValue(data.dashboard.totalIncome)}</p>
+            <p className={`text-font-robotoMono sm:text-3xl font-semibold`}>{formatValue(dashboard.totalIncome)}</p>
           </CardContent>
         </Card>
 
@@ -97,14 +94,14 @@ export default function App() {
           </CardHeader>
 
           <CardContent>
-            <p className="texfont-robotoMono sm:text-3xl font-semibold">-{formatValue(data.dashboard.totalExpenses)}</p>
+            <p className="texfont-robotoMono sm:text-3xl font-semibold">-{formatValue(dashboard.totalExpenses)}</p>
           </CardContent>
         </Card>
       </section>
 
       <section className="flex flex-col sm:flex-row mt-4 gap-4">
-        <Chart data={data.barChartData} />
-        <PizzaChart data={data.pizzaChartData} />
+        <Chart data={barChartData} />
+        <PizzaChart data={pizzaChartData} />
       </section>
 
       {showAlert && 

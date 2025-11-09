@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import  Sidebar  from "@/components/sidebar";
 import Footer from "@/components/footer";
+import { ClientProviders } from "@/providers/clientProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,13 +27,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="min-h-dvh">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh overflow-x-hidden font-robotoMono`}
-      >
-        <Sidebar />
-        {children}
-        <Footer />
-      </body>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh overflow-x-hidden font-robotoMono`}
+          >
+          <ClientProviders>
+            <Sidebar />
+            {children}
+            <Footer />
+          </ClientProviders>
+        </body>
     </html>
   );
 }
