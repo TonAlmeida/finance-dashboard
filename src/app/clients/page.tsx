@@ -2,16 +2,16 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { formatValue } from "@/utils/formatValue";
-import { NuTransactionData } from "@/types/NuTransactionData";
+import { TransactionData } from "@/types/TransactionData";
 import { BadgeDollarSign, DollarSign } from "lucide-react";
 import { useTransitions } from "@/contexts/transactionsContext";
 
 type ClientGroup = {
   document: string;
   name: string;
-  transactions: NuTransactionData[];
+  transactions: TransactionData[];
   balance: number;
 };
 
@@ -160,6 +160,9 @@ export default function ClientsPage() {
                     <p className="text-sm text-gray-500 mt-1">Transações: {selectedClient.transactions.length}</p>
                   </div>
                 </DialogTitle>
+                <DialogDescription>
+                  mostra as informações da parte(cliente/contratante) com as transações enviadas/recebidas e o balanço geral.
+                </DialogDescription>
               </DialogHeader>
 
               <div className="overflow-y-auto max-h-[60vh] overflow-x-hidden border rounded-lg mt-4">

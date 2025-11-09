@@ -1,8 +1,7 @@
-export type NuTransactionData = {
+export type TransactionData = {
     date: Date,
     value: number,
     id: string,
-    numberOfTransactions?: number,
     description: string,
 
     category: string,

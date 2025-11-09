@@ -1,14 +1,15 @@
 import { BarChartData } from "@/types/barChartData";
-import { NuTransactionData } from "@/types/NuTransactionData";
+import { TransactionData } from "@/types/TransactionData";
 import { PizzaChartData } from "@/types/pizzaChartData";
 
-    export function generateBarChartData(transactions: NuTransactionData[]): BarChartData[] {
+    export function generateBarChartData(transactions: TransactionData[]): BarChartData[] {
         const months = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 
         const summary = new Map<number, { income: number; expenses: number }>();
 
         for (const t of transactions) {
-            const monthIndex = t.date.getMonth(); // 0 = janeiro, 11 = dezembro
+            const date = t.date instanceof Date ? t.date : new Date(t.date);
+            const monthIndex = date.getMonth();
 
             if (!summary.has(monthIndex)) {
                 summary.set(monthIndex, { income: 0, expenses: 0 });
@@ -32,7 +33,7 @@ import { PizzaChartData } from "@/types/pizzaChartData";
         }));
     }
 
-    export function generatePizzaChartData(transactions: NuTransactionData[]): PizzaChartData[] {
+    export function generatePizzaChartData(transactions: TransactionData[]): PizzaChartData[] {
         const grup = transactions.reduce((acc, transaction) => {
             const category = transaction.category || "outros";
 

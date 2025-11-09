@@ -1,16 +1,16 @@
 
-import { NuTransactionData } from "@/types/NuTransactionData";
+import { TransactionData } from "@/types/TransactionData";
 import { categories } from "@/utils/categoriesList";
  
-export class NuCsvProcessor {
-    static processData (files: File[]): Promise<NuTransactionData[]> {
+export class CsvProcessor {
+    static processData (files: File[]): Promise<TransactionData[]> {
         return new Promise (async (resolve, reject) => {
             try {
                 if(!files || files.length === 0) {
                     throw new Error("Nenhum arquivo selcionado!");
                 }
 
-                const allTransactions: NuTransactionData[] = [];
+                const allTransactions: TransactionData[] = [];
                 
                 for(const file of files) {
                     //gerando NuTransactionData
@@ -62,7 +62,7 @@ export class NuCsvProcessor {
         return result;
     }
 
-    private static mappingData(data: Record<string, string>[]): NuTransactionData[] {
+    private static mappingData(data: Record<string, string>[]): TransactionData[] {
         function setCategory(description: string): string {
             if (!description) return "Indefinido";
 
@@ -103,7 +103,7 @@ export class NuCsvProcessor {
         });
     }
 
-    private static generateDashboardData(transactions: NuTransactionData[]) {
+    private static generateDashboardData(transactions: TransactionData[]) {
         const { balance, totalIncome, totalExpenses } = transactions.reduce((acc, transaction) => {
             const value = transaction.value;
 

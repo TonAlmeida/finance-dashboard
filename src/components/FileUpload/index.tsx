@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { NuCsvProcessor } from '@/utils/NuCsvProcessor';
-import { NuTransactionData } from '@/types/NuTransactionData';
+import { CsvProcessor } from '@/utils/CsvProcessor';
+import { TransactionData } from '@/types/TransactionData';
 
 interface FileUploadProps {
-  transactions: NuTransactionData[];
-  setTransactions: React.Dispatch<React.SetStateAction<NuTransactionData[] | null>>;
+  transactions: TransactionData[];
+  setTransactions: React.Dispatch<React.SetStateAction<TransactionData[] | null>>;
   onSucess?: () => void;
 }
 
@@ -19,7 +19,8 @@ export default function FileUpload({ transactions, setTransactions, onSucess }: 
 
     try {
       const fileArray = Array.from(files);
-      const trasactionsData = await NuCsvProcessor.processData(fileArray);
+      const transactionsFromCsv = await CsvProcessor.processData(fileArray);
+      const trasactionsData = transactions.concat(transactionsFromCsv);
       setTransactions(trasactionsData ?? []);
       onSucess?.();
     } catch (erro) {

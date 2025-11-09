@@ -1,279 +1,224 @@
 'use client';
 
-import { useState, useMemo } from "react";
-import { NuTransactionData } from "@/types/NuTransactionData";
-import { Search, Filter, ArrowUp, ArrowDown, DollarSign } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useTransitions } from "@/contexts/transactionsContext"; // ajuste o caminho se necessário
+import { TransactionData } from "@/types/TransactionData";
+import { Search, Filter, ArrowUp, ArrowDown, DollarSign, Pencil } from "lucide-react";
 import { formatValue } from "@/utils/formatValue";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
-interface TransactionsProps {
-  data?: NuTransactionData[];
-}
+type SortField = "date" | "value" | "description" | "category";
+type SortDirection = "asc" | "desc";
 
-type SortField = 'date' | 'value' | 'description' | 'category';
-type SortDirection = 'asc' | 'desc';
-
-export default function Transactions({ data = [] }: TransactionsProps) {
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+export default function Transactions() {
+  const { transactionsData, setTransactionsData } = useTransitions();
+  const [editing, setEditing] = useState<TransactionData | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const [dateRange, setDateRange] = useState<{ start?: string; end?: string }>({});
-  const [sortField, setSortField] = useState<SortField>('date');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [sortField, setSortField] = useState<SortField>("date");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+
+  const transactions = transactionsData ?? [];
 
   const categories = useMemo(() => {
-    return Array.from(new Set(data.map((t) => t.category).filter(Boolean))).sort();
-  }, [data]);
+    const cats = new Set<string>();
+    for (const t of transactions) cats.add(t.category);
+    return Array.from(cats).sort();
+  }, [transactions]);
 
-  const filteredTransactions = useMemo(() => {
-    return data.filter((t) => {
-      const matchesCategory = categoryFilter === "all" || t.category === categoryFilter;
-      const matchesSearch = t.description.toLowerCase().includes(searchTerm.toLowerCase());
-
-      if (dateRange.start || dateRange.end) {
-        const transactionDate = new Date(t.date);
-        const start = dateRange.start ? new Date(dateRange.start) : null;
-        const end = dateRange.end ? new Date(dateRange.end) : null;
-
-        if (start && transactionDate < start) return false;
-        if (end) {
-          const endDate = new Date(end);
-          endDate.setHours(23, 59, 59, 999);
-          if (transactionDate > endDate) return false;
-        }
-      }
-
-      return matchesCategory && matchesSearch;
+  const filtered = useMemo(() => {
+    const search = searchTerm.toLowerCase();
+    return transactions.filter((t) => {
+      const matchCat = categoryFilter === "all" || t.category === categoryFilter;
+      const matchSearch = t.description.toLowerCase().includes(search);
+      return matchCat && matchSearch;
     });
-  }, [data, categoryFilter, searchTerm, dateRange]);
+  }, [transactions, categoryFilter, searchTerm]);
 
-  const sortedTransactions = useMemo(() => {
-    return [...filteredTransactions].sort((a, b) => {
-      let aValue: string | number | Date, bValue: string | number | Date;
-
-      switch (sortField) {
-        case 'date':
-          aValue = new Date(a.date);
-          bValue = new Date(b.date);
-          break;
-        case 'value':
-          aValue = a.value;
-          bValue = b.value;
-          break;
-        case 'description':
-          aValue = a.description.toLowerCase();
-          bValue = b.description.toLowerCase();
-          break;
-        case 'category':
-          aValue = a.category.toLowerCase();
-          bValue = b.category.toLowerCase();
-          break;
-        default:
-          return 0;
-      }
-
-      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      const aVal = sortField === "date" ? new Date(a.date).getTime() : a[sortField];
+      const bVal = sortField === "date" ? new Date(b.date).getTime() : b[sortField];
+      if (aVal < bVal) return sortDirection === "asc" ? -1 : 1;
+      if (aVal > bVal) return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
-  }, [filteredTransactions, sortField, sortDirection]);
+  }, [filtered, sortField, sortDirection]);
 
-  const stats = useMemo(() => {
-    const income = filteredTransactions
-      .filter(t => t.value > 0)
-      .reduce((sum, t) => sum + t.value, 0);
-
-    const expense = filteredTransactions
-      .filter(t => t.value < 0)
-      .reduce((sum, t) => sum + t.value, 0);
-
-    return {
-      total: income + expense,
-      income,
-      expense: Math.abs(expense),
-      count: filteredTransactions.length
-    };
-  }, [filteredTransactions]);
-
-  const getCategoryColor = (category: string) => {
-    const colors: { [key: string]: string } = {
-      'Alimentação': 'bg-green-100 text-green-800',
-      'Tabacaria': 'bg-red-100 text-red-800',
-      'Educação': 'bg-blue-100 text-blue-800',
-      'Saúde': 'bg-pink-100 text-pink-800',
-      'Combustível': 'bg-orange-100 text-orange-800',
-      'Mercado': 'bg-emerald-100 text-emerald-800',
-      'Alimentação Externa': 'bg-lime-100 text-lime-800',
-      'Transferência': 'bg-purple-100 text-purple-800',
-      'Serviços Financeiros': 'bg-cyan-100 text-cyan-800',
-      'Receita': 'bg-teal-100 text-teal-800',
-      'Outros': 'bg-gray-100 text-gray-800'
-    };
-    return colors[category] || 'bg-gray-100 text-gray-800';
+  const toggleSort = (field: SortField) => {
+    setSortField(field);
+    setSortDirection(sortField === field && sortDirection === "asc" ? "desc" : "asc");
   };
 
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('desc');
-    }
+  const handleSave = () => {
+    if (!editing) return;
+    setTransactionsData((prev) =>
+      (prev ?? []).map((t) => (t.id === editing.id ? editing : t))
+    );
+    setEditing(null);
   };
 
-  const getSortIcon = (field: SortField) => {
-    if (sortField !== field) return null;
-    return sortDirection === 'asc' ? <ArrowUp size={14} /> : <ArrowDown size={14} />;
+  const formatDateInput = (date: Date | string) => {
+    if (!date) return "";
+    const d = typeof date === "string" ? new Date(date) : date;
+    return d.toISOString().split("T")[0];
   };
 
   return (
-    <section className="flex-1 shadow p-4 overflow-auto text-olive bg-white">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
-            <Filter size={18} /> Transações
-          </h2>
-          <p className="text-sm text-gray-500">
-            Saldo da lista:{" "}
-            <span className={stats.total >= 0 ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
-              {formatValue(stats.total)}
-            </span> <br/>
-            {stats.count} transações
-          </p>
+    <section className="flex-1 p-4 bg-white shadow rounded-md">
+      <div className="flex flex-wrap justify-between mb-3 gap-2">
+        <div className="flex items-center gap-2">
+          <Filter size={18} />
+          <h2 className="font-semibold text-gray-700">Transações</h2>
         </div>
-
-        <div className="flex flex-wrap gap-2">
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
-          >
-            <option value="all">Todas categorias</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-
-          <input
-            type="date"
-            placeholder="Data inicial"
-            onChange={(e) => setDateRange((prev) => ({ ...prev, start: e.target.value }))}
-            className="border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
-          />
-          <input
-            type="date"
-            placeholder="Data final"
-            onChange={(e) => setDateRange((prev) => ({ ...prev, end: e.target.value }))}
-            className="border rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
-          />
-
+        <div className="flex gap-2">
+          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <SelectTrigger className="w-[140px] text-sm">
+              <SelectValue placeholder="Categoria" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <div className="relative">
-            <Search className="absolute left-2 top-2.5 text-gray-400" size={16} />
-            <input
-              type="text"
+            <Search size={16} className="absolute left-2 top-2 text-gray-400" />
+            <Input
+              className="pl-7 w-[150px]"
               placeholder="Buscar..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="border rounded-md pl-7 pr-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-400"
             />
           </div>
-
-          {(categoryFilter !== "all" || searchTerm || dateRange.start || dateRange.end) && (
-            <button
-              onClick={() => {
-                setCategoryFilter("all");
-                setSearchTerm("");
-                setDateRange({});
-              }}
-              className="px-2 py-1 text-xs text-red-600 hover:text-red-800 hover:bg-red-50 rounded"
-            >
-              Limpar
-            </button>
-          )}
         </div>
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse">
           <thead>
-            <tr className="border-b text-left back">
-              <th 
-                className="p-2 font-semibold cursor-pointer"
-                onClick={() => handleSort('date')}
-              >
-                <div className="flex items-center gap-1">
-                  Data
-                  {getSortIcon('date')}
-                </div>
-              </th>
-              <th 
-                className="p-2 font-semibold cursor-pointer"
-                onClick={() => handleSort('description')}
-              >
-                <div className="flex items-center gap-1 bg-gray">
-                  Descrição
-                  {getSortIcon('description')}
-                </div>
-              </th>
-              <th 
-                className="hidden sm:flex p-2 font-semibold cursor-pointer"
-                onClick={() => handleSort('category')}
-              >
-                <div className="flex items-center gap-1">
-                  Categoria
-                  {getSortIcon('category')}
-                </div>
-              </th>
-              <th className="p-2 font-semibold text-right cursor-pointer"
-                  onClick={() => handleSort('value')}>
-                <div className="flex items-center justify-end gap-1">
-                  <span className="font"><DollarSign /></span>
-                  {getSortIcon('value')}
-                </div>
-              </th>
+            <tr className="border-b text-left">
+              {["date", "description", "category", "value"].map((field) => (
+                <th
+                  key={field}
+                  className="p-2 cursor-pointer font-semibold back"
+                  onClick={() => toggleSort(field as SortField)}
+                >
+                  <div className="flex items-center gap-1">
+                    {field === "date" && "Data"}
+                    {field === "description" && "Descrição"}
+                    {field === "category" && "Categoria"}
+                    {field === "value" && <DollarSign size={14} />}
+                    {sortField === field &&
+                      (sortDirection === "asc" ? <ArrowUp size={12} /> : <ArrowDown size={12} />)}
+                  </div>
+                </th>
+              ))}
+              <th className="p-2 text-right back">Editar</th>
             </tr>
           </thead>
           <tbody>
-            {sortedTransactions.map((t, index) => (
-              <tr key={`${t.id}-${index}`} className="border-b hover:bg-gray-50 transition">
-                <td className="p-2 text-gray-500 whitespace-nowrap">
-                  {new Date(t.date).toLocaleDateString("pt-BR")}
-                </td>
-                <td className="p-2">
-                 <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="font-medium text-xs sm:text-sm truncate max-w-35 sm:max-w-[500px]">{t.description}</div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t.description}</p>
-                  </TooltipContent>
-                </Tooltip>
-                </td>
-                <td className="hidden sm:flex p-2">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(t.category)}`}>
-                    {t.category}
-                  </span>
-                </td>
+            {sorted.map((t) => (
+              <tr key={t.id} className="border-b hover:bg-gray-50 transition cursor-pointer">
+                <td className="p-2 whitespace-nowrap">{new Date(t.date).toLocaleDateString("pt-BR")}</td>
+                <td className="p-2">{t.description}</td>
+                <td className="p-2">{t.category}</td>
                 <td className={`p-2 text-right font-semibold ${t.value >= 0 ? "text-green-600" : "text-red-600"}`}>
                   {formatValue(t.value)}
+                </td>
+                <td className="p-2 text-right">
+                  <Button className="cursor-pointer" size="sm" variant="ghost" onClick={() => setEditing({ ...t })}>
+                    <Pencil size={14} />
+                  </Button>
                 </td>
               </tr>
             ))}
           </tbody>
-
         </table>
       </div>
 
-      {sortedTransactions.length > 0 && (
-        <div className="mt-4 pt-3 border-t text-sm bg-gray-300 p-2 rounded-md">
-          <div className="flex justify-between">
-            <span>Receitas: <span className="text-green-600 font-medium">{formatValue(stats.income)}</span></span>
-            <span>Despesas: <span className="text-red-600 font-medium">{formatValue(stats.expense)}</span></span>
-            <span>Saldo: <span className={stats.total >= 0 ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
-              {formatValue(stats.total)}
-            </span></span>
-          </div>
-        </div>
-      )}
+      {/* Modal de Edição */}
+      <Dialog open={!!editing} onOpenChange={() => setEditing(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar Transação</DialogTitle>
+            <DialogDescription>
+              Atualize as informações da transação e clique em “Salvar” para confirmar.
+            </DialogDescription>
+          </DialogHeader>
+
+          {editing && (
+            <div className="grid gap-3 mt-3">
+              <div>
+                <Label>Data</Label>
+                <Input
+                  type="date"
+                  value={formatDateInput(editing.date)}
+                  onChange={(e) =>
+                    setEditing({ ...editing, date: new Date(e.target.value) })
+                  }
+                />
+              </div>
+              <div>
+                <Label>Descrição</Label>
+                <Input
+                  value={editing.description}
+                  onChange={(e) =>
+                    setEditing({ ...editing, description: e.target.value })
+                  }
+                />
+              </div>
+              <div>
+                <Label>Categoria</Label>
+                <Select
+                  value={editing.category}
+                  onValueChange={(value) =>
+                    setEditing({ ...editing, category: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a categoria" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((cat) => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="Outros">Outros</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Valor</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={editing.value}
+                  onChange={(e) =>
+                    setEditing({ ...editing, value: Number(e.target.value) })
+                  }
+                />
+              </div>
+            </div>
+          )}
+
+          <DialogFooter className="mt-4">
+            <Button variant="outline" onClick={() => setEditing(null)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSave}>Salvar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

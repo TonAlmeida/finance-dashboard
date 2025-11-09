@@ -9,7 +9,7 @@ export const categories: Record<string, string[]> = {
     "fundos", "ações", "poupança", "renda fixa", "cripto", "bitcoin", "ethereum",
     "pix recebido", "lucro", "retorno", "proventos"
   ],
-  "Transferências Recebidas": [
+  "Transferências": [
     "transferência recebida", "pix recebido", "depósito", "transfer", "cashback", "presente em dinheiro"
   ],
 
