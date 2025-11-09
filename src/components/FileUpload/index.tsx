@@ -20,8 +20,13 @@ export default function FileUpload({ transactions, setTransactions, onSucess }: 
     try {
       const fileArray = Array.from(files);
       const transactionsFromCsv = await CsvProcessor.processData(fileArray);
-      const trasactionsData = transactions.concat(transactionsFromCsv);
-      setTransactions(trasactionsData ?? []);
+
+      //checking if has duplicated items in the data
+      const transactionsSetIDs = new Set(transactions.map(i => i.id));
+      const newItems = transactionsFromCsv.filter(item => !transactionsSetIDs.has(item.id));
+      
+      setTransactions([...transactions, ...newItems]);
+
       onSucess?.();
     } catch (erro) {
       console.log('Erro ao processar arquivos', erro);

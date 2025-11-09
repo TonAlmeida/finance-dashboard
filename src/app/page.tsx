@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { BadgeDollarSign, CheckIcon, DollarSign, Percent, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { formatValue, generateDashboardData } from "@/utils/formatValue"
-import  PizzaChart from "@/components/pizzaChart";
+import  CategoriesChart from "@/components/categoriesChart";
 import {
   Drawer,
   DrawerTrigger,
@@ -30,7 +30,7 @@ export default function App() {
     transactionsData && setShowAlert(true);
   }, []);
 
-  return (dashboard && transactionsData) ? (
+  return (dashboard && transactionsData && transactionsData?.length > 0) ? (
     <main className="h-full sm:ml-14 p-4 bg-white text-[#6B6A3A]">
       <Header />
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4 mt-4">
@@ -101,7 +101,7 @@ export default function App() {
 
       <section className="flex flex-col sm:flex-row mt-4 gap-4">
         <Chart data={barChartData} />
-        <PizzaChart data={pizzaChartData} />
+        <CategoriesChart data={pizzaChartData} />
       </section>
 
       {showAlert && 

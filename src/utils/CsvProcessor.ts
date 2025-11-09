@@ -13,15 +13,12 @@ export class CsvProcessor {
                 const allTransactions: TransactionData[] = [];
                 
                 for(const file of files) {
-                    //gerando NuTransactionData
                     const fileData = await this.readFile(file);
                     const processedData = this.parseContent(fileData);
                     const transactions = this.mappingData(processedData);
+
                     allTransactions.push(...transactions);
                 }
-
-                //gerando dashboardData
-                const dashboard = this.generateDashboardData(allTransactions);
 
                 if(allTransactions) {
                     resolve(allTransactions);
@@ -103,27 +100,4 @@ export class CsvProcessor {
         });
     }
 
-    private static generateDashboardData(transactions: TransactionData[]) {
-        const { balance, totalIncome, totalExpenses } = transactions.reduce((acc, transaction) => {
-            const value = transaction.value;
-
-            acc.balance += value;
-
-            if (value > 0) {
-                acc.totalIncome += value;
-            } else {
-                acc.totalExpenses += Math.abs(value);
-            }
-
-
-            return acc;
-        }, { balance: 0, totalIncome: 0, totalExpenses: 0 })
-
-        return {
-            balance,
-            totalIncome,
-            totalExpenses,
-            transactionsCount: transactions.length -1,
-        }
-    }
 }
