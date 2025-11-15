@@ -1,19 +1,4 @@
-export const categories: Record<string, string[]> = {
-  // 💰 Receitas
-  "Salário / Proventos": [
-    "salário", "pagamento", "provento", "renda", "remuneração", "ganho",
-    "trabalho", "holerite", "contracheque", "adicional", "comissão", "hora extra"
-  ],
-  "Investimentos / Rendimentos": [
-    "investimento", "dividendo", "rendimento", "juros", "tesouro direto", "cdb",
-    "fundos", "ações", "poupança", "renda fixa", "cripto", "bitcoin", "ethereum",
-    "pix recebido", "lucro", "retorno", "proventos"
-  ],
-  "Transferências": [
-    "transferência recebida", "pix recebido", "depósito", "transfer", "cashback", "presente em dinheiro"
-  ],
-
-  // 🛒 Despesas gerais
+export const expensesCategories: Record<string, string[]> = {
   "Mercado / Supermercado": [
     "mercado", "supermercado", "carrefour", "atacadão", "pão de açúcar", "hiper", "extra",
     "mercantil", "minimercado", "conveniência", "compras", "feira", "hortifruti"
@@ -142,5 +127,74 @@ export const categories: Record<string, string[]> = {
   "Outros": [
     "outros", "diversos", "desconhecido", "sem categoria", "gasto não identificado",
     "misc", "variedades", "geral"
+  ]
+};
+
+export const incomeCategories: Record<string, string[]> = {
+  "Salário / Trabalho": [
+    "salário", "pagamento", "holerite", "contracheque", "renda fixa",
+    "trabalho", "serviço", "emprego", "provento", "mensal", "sal",
+    "diária", "extra", "adicional", "hora extra", "comissão", "bônus",
+    "gratificação", "adicional noturno", "feriado", "periculosidade",
+    "insalubridade", "13º", "decimo terceiro"
+  ],
+
+  "Freelance / Autônomo": [
+    "freela", "freelancer", "autônomo", "bico", "projeto", "contrato",
+    "consultoria", "pagamento avulso", "prestação de serviço",
+    "serviço avulso", "trampo"
+  ],
+
+  "Empreendimento / Negócios": [
+    "empresa", "negócio", "venda", "lucro", "receita", "pro labore",
+    "dividendo", "retirada", "faturamento", "lojista", "cliente",
+    "revenda", "mercado automático", "negócio online"
+  ],
+
+  "Investimentos / Aplicações": [
+    "investimento", "rendimento", "juros", "dividendos", "proventos",
+    "ações", "tesouro", "cdb", "fii", "fundos", "cripto", "binance",
+    "rendimentos financeiros", "rentabilidade"
+  ],
+
+  "Pix / Transferências Recebidas": [
+    "pix recebido", "transferência recebida", "depósito", "transferência",
+    "recebimento", "recebi pix", "entrada via pix", "pagamento recebido"
+  ],
+
+  "Venda de Produtos / Bens": [
+    "venda", "vendido", "mercado livre", "olx", "produto vendido",
+    "item vendido", "brechó", "roupa vendida", "equipamento vendido",
+    "eletrônico vendido", "carro vendido", "moto vendida"
+  ],
+
+  "Reembolsos / Estornos": [
+    "reembolso", "estorno", "devolução", "cashback", "retorno",
+    "correção", "desconto reverso"
+  ],
+
+  "Aluguel / Imóveis": [
+    "aluguel recebido", "locação", "imóvel", "inquilino", "renda imobiliária",
+    "arrendamento", "temporada", "airbnb renda"
+  ],
+
+  "Aposentadoria / Benefícios": [
+    "aposentadoria", "inss", "benefício", "auxílio", "pensão",
+    "bolsa família", "auxílio brasil", "auxílio emergencial", "bpc"
+  ],
+
+  "Prêmios / Sorteios": [
+    "prêmio", "sorteio", "raspadinha", "mega sena", "loteria",
+    "ganhei", "premiação"
+  ],
+
+  "Doações Recebidas": [
+    "doação recebida", "ajuda", "presente em dinheiro",
+    "transferência de familiar", "apoio"
+  ],
+
+  "Outras Receitas": [
+    "outros", "diversos", "não identificado", "renda desconhecida",
+    "ganhos diversos", "entrada geral", "extra"
   ]
 };

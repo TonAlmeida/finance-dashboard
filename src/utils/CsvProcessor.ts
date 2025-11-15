@@ -1,6 +1,7 @@
 
+import { description } from "@/components/chart";
 import { TransactionData } from "@/types/TransactionData";
-import { categories } from "@/utils/categoriesList";
+import { expensesCategories, incomeCategories } from "@/utils/categoriesList";
  
 export class CsvProcessor {
     static processData (files: File[]): Promise<TransactionData[]> {
@@ -60,44 +61,57 @@ export class CsvProcessor {
     }
 
     private static mappingData(data: Record<string, string>[]): TransactionData[] {
-        function setCategory(description: string): string {
-            if (!description) return "Indefinido";
+    return data
+        .filter(d => d["Data"])
+        .map(d => {
+            const normalized = Object.fromEntries(
+                Object.entries(d).map(([key, value]) => [key.toLowerCase(), value])
+            );
 
-            const text = description.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const [day, month, year] = normalized["data"].split("/").map(Number);
+            const [type, counterpartName, counterpartDocument] =
+                normalized["descrição"].trim().split("-").map(item => item.trim());
 
-            
+            function detectCategory(description: string, categories: Record<string, string[]>): string {
+                const normalizedDesc = description.toLowerCase();
 
+                for (const [category, keywords] of Object.entries(categories)) {
+                    for (const keyword of keywords) {
+                        if (normalizedDesc.includes(keyword.toLowerCase())) {
+                            return category;
+                        }
+                    }
+                }
 
-            for (const [category, keywords] of Object.entries(categories)) {
-                if (keywords.some(keyword => text.includes(keyword))) return category;
+                return "Outros";
             }
 
-            return "Outros";
-        }
+            function generateCategory() {
+                if (type === "income") {
+                    return detectCategory(normalized["descrição"], incomeCategories);
+                } 
+                if (type === "expense") {
+                    return detectCategory(normalized["descrição"], expensesCategories);
+                }
+                return "Outros";
+            }
 
-        return data
-            .filter(d => d["Data"]) // ignora linhas sem data
-            .map(d => {
-                const normalized = Object.fromEntries(
-                    Object.entries(d).map(([key, value]) => [key.toLowerCase(), value])
-                );
+            const category = generateCategory();
 
-                const [day, month, year] = normalized["data"].split("/").map(Number);
-                const [type, counterpartName, counterpartDocument ] = normalized["descrição"].trim().split("-").map(item => item.trim());
+            return {
+                date: new Date(year, month - 1, day),
+                value: +normalized["valor"],
+                id: normalized["identificador"],
+                description: normalized["descrição"],
+                category,
+                numberOfTransactions: data.length,
 
-                return {
-                    date: new Date(year, month - 1, day),
-                    value: +normalized["valor"],
-                    id: normalized["identificador"],
-                    description: normalized["descrição"],
-                    category: setCategory(normalized["descrição"]),
-                    numberOfTransactions: data.length,
-
-                    type,
-                    counterpartName,
-                    counterpartDocument,
-                };
+                type,
+                counterpartName,
+                counterpartDocument,
+            };
         });
-    }
+}
+
 
 }

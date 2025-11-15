@@ -41,7 +41,7 @@ export default function CategoryBarChart({
     data && data.length > 0
       ? data
           .filter((d) => typeof d.value === 'number' && d.value > 0)
-          .sort((a, b) => b.value - a.value) // ordena do maior pro menor
+          .sort((a, b) => b.value - a.value)
       : [{ name: 'Sem dados', value: 0 }];
 
   return (

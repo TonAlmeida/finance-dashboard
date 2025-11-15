@@ -15,6 +15,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function Chart({ data = [] }: ChartProps) {
+  data.sort();
   return (
     <Card className="w-full max-w-[600px] sm:w-1/2 bg-transparent">
       <CardHeader>
