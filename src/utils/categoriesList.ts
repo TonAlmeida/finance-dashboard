@@ -193,8 +193,8 @@ export const incomeCategories: Record<string, string[]> = {
     "transferência de familiar", "apoio"
   ],
 
-  "Outras Receitas": [
+  "Outros": [
     "outros", "diversos", "não identificado", "renda desconhecida",
     "ganhos diversos", "entrada geral", "extra"
-  ]
+  ],
 };

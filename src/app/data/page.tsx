@@ -8,8 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { categories } from "@/utils/categoriesList";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Header } from "@/components/header";
 import { formatValue, formatInputValue, generateDashboardData } from "@/utils/formatValue";
@@ -18,16 +17,15 @@ import { CheckCircle2Icon } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
 import { TransactionData } from "@/types/TransactionData";
 import { useTransitions } from "@/contexts/transactionsContext"
+import { expensesCategories, incomeCategories } from "@/utils/categoriesList"
 
 type TransactionFormData = z.infer<typeof transactionSchema>;
 
 export default function Data() {
   const { transactionsData, setTransactionsData } = useTransitions();
   const [showAlert, setShowAlert] = useState<boolean>(false);
-  const categoriesArray = Array.from(Object.keys(categories));
   const dashboard = generateDashboardData(transactionsData ?? []);
-  const [displayValue, setDisplayValue] = useState("0,00"); 
-
+  const [displayValue, setDisplayValue] = useState("");
 
     const handleSucess = () => {//parameter of FileUpload
       setShowAlert(true);
@@ -59,6 +57,8 @@ export default function Data() {
         }
       } catch(e) {
         console.log('Erro ao tentar salvar a nova transação', e);
+      } finally {
+        setValue("value", 0);
       }
 
       toast.success("Transação salva com sucesso!");
@@ -72,9 +72,15 @@ export default function Data() {
         defaultValues: {
           numberOfTransactions: 1,
           type: "expense",
-          value: 0,
+          value: undefined,
+          category: "Outros"
         },
       });
+
+      useEffect(() => {
+        setValue("category", "Outros");
+      }, [watch("type")]);
+
 
     return (
         <main className="sm:ml-14 p-4 bg-white min-h-dvh">
@@ -145,20 +151,25 @@ export default function Data() {
                         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                           const raw = e.target.value;
 
-                          setDisplayValue(raw); // atualiza texto
+                          setDisplayValue(raw);
 
                           const cleaned = raw.replace(/[^\d,]/g, "").replace(",", ".");
                           const numericValue = parseFloat(cleaned);
 
                           if (!isNaN(numericValue)) {
-                            onChange(numericValue); // envia o número pro form
+                            onChange(numericValue);
                           } else {
                             onChange(0);
                           }
                         };
 
                         const handleBlur = () => {
-                          setDisplayValue(formatInputValue(value ?? 0));
+                          if (value === undefined || value === null || value === 0) {
+                            setDisplayValue("");
+                            return;
+                          }
+
+                          setDisplayValue(formatInputValue(value));
                         };
 
                         return (
@@ -190,36 +201,43 @@ export default function Data() {
                     <Select
                       name="category"
                       onValueChange={(value) => setValue("category", value)}
-                      value={watch("category") || "Outros" }
+                      value={watch("category") || "Outros"}
                     >
 
                       <SelectTrigger id="category">
                         <SelectValue placeholder="Selecione a categoria" />
                       </SelectTrigger>
                       <SelectContent>
-                        {categoriesArray.map((cat) => (
-                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                        ))}
+                        {
+                          watch("type") === "income"
+                          ? Object.entries(incomeCategories).map(([key]) => (
+                              <SelectItem key={key} value={key}>
+                                {key}
+                              </SelectItem>
+                            ))
+                          : Object.entries(expensesCategories).map(([key]) => (
+                              <SelectItem key={key} value={key}>
+                                {key}
+                              </SelectItem>
+                            ))
+                        }
                       </SelectContent>
                     </Select>
           
                     {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>}
                   </div>                  
 
-                  {/* name of the part */}
                   <div className="col-span-2">
                     <Label className="mb-2" htmlFor="counterpartName">Nome do Contraparte</Label>
                     <Input id="counterpartName" type="text" {...register("counterpartName")} />
                     {errors.counterpartName && <p className="text-red-500 text-sm mt-1">{errors.counterpartName.message}</p>}
                   </div>
 
-                  {/* part document */}
                   <div className="col-span-2">
                     <Label className="mb-2" htmlFor="counterpartDocument">Documento do Contraparte (opcional)</Label>
                     <Input id="counterpartDocument" type="text" {...register("counterpartDocument")} />
                   </div>
 
-                  {/* buttons */}
                   <div className="flex justify-end items-center gap-2 mt-4 col-span-2">
 
                     <Button
