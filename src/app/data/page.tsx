@@ -58,7 +58,7 @@ export default function Data() {
       } catch(e) {
         console.log('Erro ao tentar salvar a nova transação', e);
       } finally {
-        setValue("value", 0);
+        setDisplayValue("");
       }
 
       toast.success("Transação salva com sucesso!");
