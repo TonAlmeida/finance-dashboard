@@ -13,10 +13,13 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
-
     const pathName = usePathname().slice(1);
     const [ selected, setSelected ] = useState('');
+    const [open, setOpen] = useState(false);
+
+
     useEffect(() => {
+        setOpen(false);
         if (pathName) {
             setSelected(pathName);
         } else {
@@ -56,7 +59,7 @@ export default function Sidebar() {
 
                         <Tooltip>
                             <TooltipTrigger>
-                                <Link onClick={sel} data-menu-id="transactions" href="/transactions"className={`${selected === 'transactions' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
+                                <Link onClick={sel} data-menu-id="transactions" href="/transactions" className={`${selected === 'transactions' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
                                     <DollarSignIcon className="h-5 w-5" />
                                     <span className="sr-only">lista de trnsações</span>
                                 </Link>
@@ -68,7 +71,7 @@ export default function Sidebar() {
 
                         <Tooltip>
                             <TooltipTrigger>
-                                <Link onClick={sel} data-menu-id="clients" href="/clients"className={`${selected === 'clients' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
+                                <Link onClick={sel} data-menu-id="clients" href="/clients" className={`${selected === 'clients' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
                                     <Users className="h-5 w-5" />
                                     <span className="sr-only">contrapartes</span>
                                 </Link>
@@ -80,7 +83,7 @@ export default function Sidebar() {
 
                         <Tooltip>
                             <TooltipTrigger>
-                                <Link onClick={sel} data-menu-id="data" href="/data"className={`${selected === 'data' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
+                                <Link onClick={sel} data-menu-id="data" href="/data" className={`${selected === 'data' ? 'selected' : ''} flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground`}>
                                     <DownloadIcon className="h-5 w-5" />
                                     <span className="sr-only">gerar dados</span>
                                 </Link>
@@ -111,7 +114,7 @@ export default function Sidebar() {
 
             <div className="sm:hidden flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
                 <header className="sticky top-0 z-30 flex h-14 items-center px-4 border-b bg-background gap-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-                    <Sheet>
+                    <Sheet open={open} onOpenChange={setOpen}>
                         <SheetTrigger asChild >
                             <Button size="icon" variant="outline" className="sm:hidden" >
                                 <PanelBottom className="h-5 w-5" />
@@ -119,7 +122,10 @@ export default function Sidebar() {
                             </Button>
                         </SheetTrigger>
 
-                        <SheetContent side="left" className="sm:max-w-xs">
+                        <SheetContent
+                            side="left"
+                            className="sm:max-w-xs"
+                        >
                             <SheetTitle className="sr-only">conteúdo</SheetTitle>
                             <nav className="grid gap-6 text-lg font-medium">
                                 <Link data-menu-id="home" onClick={sel} href="/" className="ml-5 mt-5 flex h-10 w-10 beautifulBack rounded-full text-lg items-center justify-center text-white md:text-base gap-2">

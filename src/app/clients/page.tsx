@@ -144,53 +144,70 @@ export default function ClientsPage() {
         </table>
       </div>
 
-      {/* Modal de Detalhes */}
       <Dialog open={!!selectedClient} onOpenChange={() => setSelectedClient(null)}>
-        <DialogContent className="max-w-3xl w-full max-h-[70vh] p-4 overflow-hidden rounded-lg">
+        <DialogContent className="max-w-lg w-full max-h-[80vh] p-4 rounded-xl overflow-hidden">
+
+          {/* Necessário para acessibilidade */}
+          <DialogHeader>
+            <DialogTitle className="sr-only">Detalhes do cliente</DialogTitle>
+          </DialogHeader>
+
           {selectedClient && (
             <>
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarFallback>{selectedClient.name.slice(0, 2).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-semibold text-lg">{selectedClient.name}</p>
-                    <p className="text-sm text-gray-600">{selectedClient.document}</p>
-                    <p className="text-sm text-gray-500 mt-1">Transações: {selectedClient.transactions.length}</p>
-                  </div>
-                </DialogTitle>
-                <DialogDescription>
-                  mostra as informações da parte(cliente/contratante) com as transações enviadas/recebidas e o balanço geral.
-                </DialogDescription>
-              </DialogHeader>
+              {/* Cabeçalho */}
+              <div className="flex items-center gap-3 mb-3">
+                <Avatar className="h-12 w-12">
+                  <AvatarFallback className="text-base font-bold">
+                    {selectedClient.name.slice(0, 2).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
 
-              <div className="overflow-y-auto max-h-[60vh] overflow-x-hidden border rounded-lg mt-4">
-                <table className="w-full table-fixed text-sm border-collapse">
-                  <thead className="bg-gray-50 sticky top-0 z-10">
-                    <tr>
-                      <th className="px-4 py-2 w-24">Data</th>
-                      <th className="px-4 py-2 w-full">Descrição</th>
-                      <th className="px-4 py-2 w-28 text-right">Valor</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {selectedClient.transactions.map((t, i) => (
-                      <tr key={i} className="hover:bg-gray-50 flex justify-around items-center">
-                        <td className="px-4 py-2 whitespace-nowrap">{new Date(t.date).toLocaleDateString()}</td>
-                        <td className="px-4 py-2 truncate max-w-full">{t.description}</td>
-                        <td className={`px-4 py-2 text-right font-semibold ${t.value >= 0 ? "text-green-600" : "text-red-600"}`}>
-                          {formatValue(t.value)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <div className="flex flex-col">
+                  <span className="font-semibold text-lg">{selectedClient.name}</span>
+                  <span className="text-sm text-gray-600">{selectedClient.document}</span>
+                  <span className="text-xs text-gray-500 mt-1">
+                    {selectedClient.transactions.length} transações
+                  </span>
+                </div>
+              </div>
+
+              {/* Conteúdo rolável */}
+              <div className="overflow-y-auto max-h-[65vh] space-y-2">
+
+                {selectedClient.transactions.map((t, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center bg-gray-50 rounded-lg p-3 border hover:bg-gray-100 transition"
+                  >
+                    {/* Data + categoria */}
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-gray-800">
+                        {new Date(t.date).toLocaleDateString()}
+                      </span>
+
+                      <span className="text-xs text-gray-500">
+                        {t.category || "Sem categoria"}
+                      </span>
+                    </div>
+
+                    {/* Valor */}
+                    <span
+                      className={`text-sm font-semibold ${
+                        t.value >= 0 ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {formatValue(t.value)}
+                    </span>
+                  </div>
+                ))}
               </div>
             </>
           )}
         </DialogContent>
       </Dialog>
+
+
+
     </main>
   );
 }

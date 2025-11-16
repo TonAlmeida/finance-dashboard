@@ -84,7 +84,7 @@ export default function Data() {
 
     return (
         <main className="sm:ml-14 p-4 bg-white min-h-dvh">
-          <div className={`opacity-0 absolute right-0 flex justify-end ${showAlert && 'opacity-100'}`}>
+          <div className={`right-0 justify-end z-10 ${showAlert ? 'absolute' : "hidden"}`}>
             <Alert className="max-w-lg bg-green-100">
               <CheckCircle2Icon />
               <AlertTitle>Sucesso! upload de arquivos bem sucedido</AlertTitle>

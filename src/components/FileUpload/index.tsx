@@ -61,7 +61,7 @@ export default function FileUpload({ transactions, setTransactions, onSucess }: 
         aria-label="Selecionar CSVs"
         onClick={handleButtonClick}
         disabled={isProcessing}
-        className="relative z-10 cursor-pointer bg-blue-50 text-blue-700 px-4 py-2 rounded-full font-semibold hover:bg-blue-100 text-sm"
+        className="relative cursor-pointer bg-blue-50 text-blue-700 px-4 py-2 rounded-full font-semibold hover:bg-blue-100 text-sm"
       >
         {isProcessing ? "Processando..." : "Selecionar CSV(s)"}
       </button>
