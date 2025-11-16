@@ -73,12 +73,15 @@ export default function Transactions() {
 
   return (
     <section className="flex-1 p-4 bg-white shadow rounded-md">
-      <div className="flex flex-wrap justify-between mb-3 gap-2">
+      
+      {/* ----------- FILTROS ----------- */}
+      <div className="flex flex-col sm:flex-row sm:justify-between mb-3 gap-3">
         <div className="flex items-center gap-2">
           <Filter size={18} />
           <h2 className="font-semibold text-gray-700">Transações</h2>
         </div>
-        <div className="flex gap-2">
+
+        <div className="flex flex-col sm:flex-row gap-2">
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
             <SelectTrigger className="w-[140px] text-sm">
               <SelectValue placeholder="Categoria" />
@@ -90,6 +93,7 @@ export default function Transactions() {
               ))}
             </SelectContent>
           </Select>
+
           <div className="relative">
             <Search size={16} className="absolute left-2 top-2 text-gray-400" />
             <Input
@@ -102,17 +106,18 @@ export default function Transactions() {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm border-collapse">
+      {/* ----------- TABELA ----------- */}
+      <div className="w-full overflow-x-auto overflow-y-hidden">
+        <table className="w-full text-sm border-collapse min-w-[600px]">
           <thead>
             <tr className="border-b text-left">
               {["date", "description", "category", "value"].map((field) => (
                 <th
                   key={field}
-                  className="p-2 cursor-pointer font-semibold back"
+                  className="p-2 cursor-pointer font-semibold"
                   onClick={() => toggleSort(field as SortField)}
                 >
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 whitespace-nowrap">
                     {field === "date" && "Data"}
                     {field === "description" && "Descrição"}
                     {field === "category" && "Categoria"}
@@ -122,18 +127,27 @@ export default function Transactions() {
                   </div>
                 </th>
               ))}
-              <th className="p-2 text-right back">Editar</th>
+              <th className="p-2 text-right">Editar</th>
             </tr>
           </thead>
+
           <tbody>
             {sorted.map((t) => (
               <tr key={t.id} className="border-b hover:bg-gray-50 transition cursor-pointer">
-                <td className="p-2 whitespace-nowrap">{new Date(t.date).toLocaleDateString("pt-BR")}</td>
-                <td className="p-2">{t.description}</td>
+                <td className="p-2 whitespace-nowrap">
+                  {new Date(t.date).toLocaleDateString("pt-BR")}
+                </td>
+
+                <td className="p-2 max-w-[200px] truncate">
+                  {t.description}
+                </td>
+
                 <td className="p-2">{t.category}</td>
+
                 <td className={`p-2 text-right font-semibold ${t.value >= 0 ? "text-green-600" : "text-red-600"}`}>
                   {formatValue(t.value)}
                 </td>
+
                 <td className="p-2 text-right">
                   <Button className="cursor-pointer" size="sm" variant="ghost" onClick={() => setEditing({ ...t })}>
                     <Pencil size={14} />
@@ -145,13 +159,13 @@ export default function Transactions() {
         </table>
       </div>
 
-      {/* Modal de Edição */}
+      {/* ----------- MODAL ----------- */}
       <Dialog open={!!editing} onOpenChange={() => setEditing(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Editar Transação</DialogTitle>
             <DialogDescription>
-              Atualize as informações da transação e clique em “Salvar” para confirmar.
+              Atualize as informações da transação e clique em “Salvar”.
             </DialogDescription>
           </DialogHeader>
 
@@ -167,6 +181,7 @@ export default function Transactions() {
                   }
                 />
               </div>
+
               <div>
                 <Label>Descrição</Label>
                 <Input
@@ -176,6 +191,7 @@ export default function Transactions() {
                   }
                 />
               </div>
+
               <div>
                 <Label>Categoria</Label>
                 <Select
@@ -189,14 +205,13 @@ export default function Transactions() {
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
+                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
                     ))}
                     <SelectItem value="Outros">Outros</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+
               <div>
                 <Label>Valor</Label>
                 <Input
@@ -219,6 +234,7 @@ export default function Transactions() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
     </section>
   );
 }

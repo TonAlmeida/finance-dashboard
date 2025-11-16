@@ -1,4 +1,3 @@
-
 import { TransactionData } from "@/types/TransactionData";
 import { expensesCategories, incomeCategories } from "@/utils/categoriesList";
  
@@ -105,7 +104,7 @@ export class CsvProcessor {
                 category,
                 numberOfTransactions: data.length,
 
-                type: (+normalized["valor"] > 0) ? "income" : "expense",
+                type,
                 counterpartName,
                 counterpartDocument,
             };
