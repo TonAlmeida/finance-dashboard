@@ -110,7 +110,6 @@ export default function Data() {
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 sm:grid-cols-2 gap-4 space-y-4">
-
                   <div>
                     <Label className="mb-2" htmlFor="date">Data</Label>
                     <Input id="date" type="date" {...register("date")} />
@@ -225,7 +224,7 @@ export default function Data() {
                     </Select>
           
                     {errors.category && <p className="text-red-500 text-sm mt-1">{errors.category.message}</p>}
-                  </div>                  
+                  </div>
 
                   <div className="col-span-2">
                     <Label className="mb-2" htmlFor="counterpartName">Nome do Contraparte</Label>
@@ -242,14 +241,17 @@ export default function Data() {
 
                     <Button
                       type="button"
-                      variant="secondary"
-                      className=""
-                      onClick={() => reset()}
+                      variant="ghost"
+                      className="bg-gray-100 hover:bg-gray-300 text-black cursor-pointer hover:shadow-2xl"
+                      onClick={() => {
+                        reset();
+                        setDisplayValue("");
+                      }}
                     >
                       Limpar
                     </Button>
 
-                    <Button type="submit" className="bg-green-300 hover:bg-green-400" variant={"ghost"}>
+                    <Button type="submit" className="bg-green-300 hover:bg-green-400 cursor-pointer" variant={"ghost"}>
                       Salvar Transação
                     </Button>
                     

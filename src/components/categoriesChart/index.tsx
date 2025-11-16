@@ -36,7 +36,7 @@ export default function CategoryBarChart({
   title = 'Distribuição por Categoria',
   description = 'Comparação dos valores totais por categoria',
 }: CategoryBarChartProps) {
-  // Filtra dados válidos
+
   const chartData =
     data && data.length > 0
       ? data
@@ -45,29 +45,35 @@ export default function CategoryBarChart({
       : [{ name: 'Sem dados', value: 0 }];
 
   return (
-    <Card className="w-full max-w-[900px] sm:w-1/2 shadow-md border border-border bg-transparent">
+    <Card className="w-full max-w-full shadow-md border border-border bg-transparent">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-semibold">{title}</CardTitle>
-        <CardDescription className="text-xs text-muted-foreground">
+        <CardTitle className="text-sm sm:text-base font-semibold">{title}</CardTitle>
+        <CardDescription className="text-xs sm:text-sm text-muted-foreground">
           {description}
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="h-64">
+      {/* RESPONSIVE HEIGHT */}
+      <CardContent className="h-[260px] sm:h-[300px] md:h-[360px] lg:h-[420px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
             layout="vertical"
-            margin={{ top: 10, right: 20, left: 60, bottom: 10 }}
+            margin={{ top: 10, right: 20, left: 40, bottom: 10 }}
           >
             <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+
             <XAxis type="number" />
+
+            {/* RESPONSIVE LABEL WIDTH + FONT */}
             <YAxis
               type="category"
               dataKey="name"
-              width={100}
-              tick={{ fontSize: 11 }}
+              width={80}
+              tick={{ fontSize: 10 }}
+              tickMargin={8}
             />
+
             <Tooltip
               formatter={(v: number, name: string) => [`R$ ${v.toFixed(2)}`, name]}
               contentStyle={{
@@ -76,7 +82,9 @@ export default function CategoryBarChart({
                 borderRadius: '0.5rem',
               }}
             />
+
             <Legend />
+
             <Bar dataKey="value" radius={[4, 4, 4, 4]}>
               {chartData.map((entry, index) => (
                 <Cell

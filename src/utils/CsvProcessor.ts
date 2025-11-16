@@ -1,5 +1,4 @@
 
-import { description } from "@/components/chart";
 import { TransactionData } from "@/types/TransactionData";
 import { expensesCategories, incomeCategories } from "@/utils/categoriesList";
  
@@ -72,6 +71,7 @@ export class CsvProcessor {
             const [type, counterpartName, counterpartDocument] =
                 normalized["descrição"].trim().split("-").map(item => item.trim());
 
+
             function detectCategory(description: string, categories: Record<string, string[]>): string {
                 const normalizedDesc = description.toLowerCase();
 
@@ -86,14 +86,13 @@ export class CsvProcessor {
                 return "Outros";
             }
 
+        
             function generateCategory() {
-                if (type === "income") {
+                if (+normalized["valor"] > 0) {
                     return detectCategory(normalized["descrição"], incomeCategories);
-                } 
-                if (type === "expense") {
+                } else {
                     return detectCategory(normalized["descrição"], expensesCategories);
                 }
-                return "Outros";
             }
 
             const category = generateCategory();
@@ -106,7 +105,7 @@ export class CsvProcessor {
                 category,
                 numberOfTransactions: data.length,
 
-                type,
+                type: (+normalized["valor"] > 0) ? "income" : "expense",
                 counterpartName,
                 counterpartDocument,
             };
