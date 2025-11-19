@@ -4,7 +4,8 @@ import { Button } from "../ui/button";
 import { Sheet,
         SheetTrigger,
         SheetContent,
-        SheetTitle
+        SheetTitle,
+        SheetDescription
  } from "../ui/sheet";
 import { DollarSignIcon, DownloadIcon, Home, LogOut, Package, PanelBottom, Users } from "lucide-react";
 import { TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
@@ -126,7 +127,11 @@ export default function Sidebar() {
                             side="left"
                             className="sm:max-w-xs"
                         >
-                            <SheetTitle className="sr-only">conteúdo</SheetTitle>
+
+                            <SheetTitle className="sr-only">Menu lateral</SheetTitle>
+                            <SheetDescription className="sr-only">
+                                Navegação principal do aplicativo.
+                            </SheetDescription>
                             <nav className="grid gap-6 text-lg font-medium">
                                 <Link data-menu-id="home" onClick={sel} href="/" className="ml-5 mt-5 flex h-10 w-10 beautifulBack rounded-full text-lg items-center justify-center text-white md:text-base gap-2">
                                     <Package className="h-5 w-5 transition-all"/>

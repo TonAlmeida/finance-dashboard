@@ -5,15 +5,7 @@ import { useTransitions } from "@/contexts/transactionsContext";
 import { TransactionData } from "@/types/TransactionData";
 import { Search, Filter, ArrowUp, ArrowDown, DollarSign, Pencil } from "lucide-react";
 import { formatValue } from "@/utils/formatValue";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -23,6 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DialogDescription } from "@radix-ui/react-dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { TransactionEditModal } from "../transacrtionsEditModal";
 
 type SortField = "date" | "value" | "description" | "category";
 type SortDirection = "asc" | "desc";
@@ -85,8 +79,6 @@ export default function Transactions() {
 
   return (
     <section className="flex-1 p-4 bg-white shadow rounded-md">
-
-      {/* -------- FILTROS -------- */}
       <div className="flex flex-col sm:flex-row sm:justify-between mb-4 gap-4">
         <div className="flex items-center gap-2">
           <Filter size={18} />
@@ -120,7 +112,6 @@ export default function Transactions() {
         </div>
       </div>
 
-      {/* -------- TABELA DESKTOP -------- */}
       <div className="hidden md:block">
         <div className="w-full overflow-x-auto">
           <table className="w-full text-sm border-collapse min-w-[650px]">
@@ -129,7 +120,7 @@ export default function Transactions() {
                 {["date", "description", "category", "value"].map((field) => (
                   <th
                     key={field}
-                    className="p-2 cursor-pointer font-semibold"
+                    className="p-2 font-semibold"
                     onClick={() => toggleSort(field as SortField)}
                   >
                     <div className="flex items-center gap-1 whitespace-nowrap">
@@ -154,13 +145,22 @@ export default function Transactions() {
               {sorted.map((t) => (
                 <tr
                   key={t.id}
-                  className="border-b hover:bg-gray-50 transition cursor-pointer"
+                  className="border-b hover:bg-gray-50 transition cursor-default"
                 >
                   <td className="p-2 whitespace-nowrap">
                     {new Date(t.date).toLocaleDateString("pt-BR")}
                   </td>
 
-                  <td className="p-2 max-w-[250px] truncate">{t.description}</td>
+                  <td className="p-2 max-w-[250px] truncate">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <p className="truncate">{t.description}</p>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {t.description}
+                      </TooltipContent>
+                    </Tooltip>
+                  </td>
 
                   <td className="p-2">{t.category}</td>
 
@@ -177,6 +177,7 @@ export default function Transactions() {
                       size="sm"
                       variant="ghost"
                       onClick={() => setEditing({ ...t })}
+                      className="cursor-pointer"
                     >
                       <Pencil size={14} />
                     </Button>
@@ -188,7 +189,6 @@ export default function Transactions() {
         </div>
       </div>
 
-      {/* -------- LISTA MOBILE -------- */}
       <div className="md:hidden space-y-3 mt-2">
         {sorted.map((t) => (
           <div
@@ -220,86 +220,18 @@ export default function Transactions() {
         ))}
       </div>
 
-      {/* -------- MODAL -------- */}
-      <Dialog open={!!editing} onOpenChange={() => setEditing(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Editar Transação</DialogTitle>
-            <DialogDescription>
-              Atualize as informações da transação e clique em “Salvar”.
-            </DialogDescription>
-          </DialogHeader>
+      <TransactionEditModal
+        open={!!editing}
+        onClose={() => setEditing(null)}
+        transaction={editing}
+        categories={categories}
+        onSave={(updated) => {
+          setTransactionsData((prev) =>
+            (prev ?? []).map((t) => (t.id === updated.id ? updated : t))
+          );
+        }}
+      />
 
-          {editing && (
-            <div className="grid gap-3 mt-3">
-              <div>
-                <Label>Data</Label>
-                <Input
-                  type="date"
-                  value={formatDateInput(editing.date)}
-                  onChange={(e) =>
-                    setEditing({ ...editing, date: new Date(e.target.value) })
-                  }
-                />
-              </div>
-
-              <div>
-                <Label>Descrição</Label>
-                <Input
-                  value={editing.description}
-                  onChange={(e) =>
-                    setEditing({ ...editing, description: e.target.value })
-                  }
-                />
-              </div>
-
-              <div>
-                <Label>Categoria</Label>
-                <Select
-                  value={editing.category}
-                  onValueChange={(value) =>
-                    setEditing({ ...editing, category: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecione a categoria" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                    <SelectItem value="Outros">Outros</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label>Valor</Label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  value={editing.value}
-                  onChange={(e) =>
-                    setEditing({
-                      ...editing,
-                      value: Number(e.target.value),
-                    })
-                  }
-                />
-              </div>
-            </div>
-          )}
-
-          <DialogFooter className="mt-4">
-            <Button variant="outline" onClick={() => setEditing(null)}>
-              Cancelar
-            </Button>
-            <Button onClick={handleSave}>Salvar</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </section>
   );
 }

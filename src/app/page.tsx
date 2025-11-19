@@ -31,7 +31,7 @@ export default function App() {
   }, []);
 
   return (dashboard && transactionsData && transactionsData?.length > 0) ? (
-    <main className="h-full sm:ml-14 p-4 bg-white text-[#6B6A3A]">
+    <main className="sm:ml-14 p-4 bg-white text-[#6B6A3A] overflow-x-hidden">
       <Header />
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:grid-cols-4 mt-4">
         <Card className="back">
@@ -127,7 +127,7 @@ export default function App() {
     <main className="ml-0 sm:ml-14">
     <Header />
     <div className="flex flex-col justify-center items-center h-96">
-      <h1 className="text-center">Nenhum dado para mostrar :(</h1>
+      <h1 className="text-center">Abra o menu na opção Gerar dados <br/> para adicionar :)</h1>
     </div>
     </main>
   )

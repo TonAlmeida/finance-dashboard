@@ -9,29 +9,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import React, { useEffect, useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Header } from "@/components/header";
-import { formatValue, formatInputValue, generateDashboardData } from "@/utils/formatValue";
+import { formatInputValue, generateDashboardData } from "@/utils/formatValue";
 import { transactionSchema } from "@/utils/transactionSchema";
-import { CheckCircle2Icon } from "lucide-react";
 import FileUpload from "@/components/FileUpload";
 import { TransactionData } from "@/types/TransactionData";
 import { useTransitions } from "@/contexts/transactionsContext"
 import { expensesCategories, incomeCategories } from "@/utils/categoriesList"
+import { useRouter } from "next/navigation";
+
 
 type TransactionFormData = z.infer<typeof transactionSchema>;
 
 export default function Data() {
   const { transactionsData, setTransactionsData } = useTransitions();
-  const [showAlert, setShowAlert] = useState<boolean>(false);
   const dashboard = generateDashboardData(transactionsData ?? []);
   const [displayValue, setDisplayValue] = useState("");
+  const router = useRouter();
 
-    const handleSucess = () => {//parameter of FileUpload
-      setShowAlert(true);
-      setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
+    const handleSucess = () => {
+      router.push("/");
     }
 
     const onSubmit = (data: TransactionFormData) => {
@@ -83,21 +80,9 @@ export default function Data() {
 
 
     return (
-        <main className="sm:ml-14 p-4 bg-white min-h-dvh">
-          <div className={`right-0 justify-end z-10 ${showAlert ? 'absolute' : "hidden"}`}>
-            <Alert className="max-w-lg bg-green-100">
-              <CheckCircle2Icon />
-              <AlertTitle>Sucesso! upload de arquivos bem sucedido</AlertTitle>
-              <AlertDescription>
-                foram importados {transactionsData?.length} transações, totalizando {formatValue(dashboard.totalIncome)} recebidos,
-                {formatValue(dashboard.totalExpenses)} gastos, com um balanço total de {formatValue(dashboard.balance)}
-              </AlertDescription>
-            </Alert>
-          </div>
-          
-          
+        <main className="sm:ml-14 bg-white py-10">  
           <Header />
-          <div className="flex w-full">
+          <div className="flex max-w-full">
             <div className="flex w-full justify-center mt-6">
               <Card className="w-full max-w-xl">
 
