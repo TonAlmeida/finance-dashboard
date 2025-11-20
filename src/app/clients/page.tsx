@@ -7,6 +7,7 @@ import { formatValue } from "@/utils/formatValue";
 import { TransactionData } from "@/types/TransactionData";
 import { BadgeDollarSign, DollarSign } from "lucide-react";
 import { useTransitions } from "@/contexts/transactionsContext";
+import GoUp from "@/components/GoUp"
 
 type ClientGroup = {
   document: string;
@@ -73,7 +74,7 @@ export default function ClientsPage() {
 
   return (
     <main className="p-4 sm:ml-14 bg-white">
-      {/* Filtros */}
+
       <div className="flex flex-wrap gap-3 mb-4 items-center">
         <input
           type="text"
@@ -147,14 +148,12 @@ export default function ClientsPage() {
       <Dialog open={!!selectedClient} onOpenChange={() => setSelectedClient(null)}>
         <DialogContent className="max-w-lg w-full max-h-[80vh] p-4 rounded-xl overflow-hidden">
 
-          {/* Necessário para acessibilidade */}
           <DialogHeader>
             <DialogTitle className="sr-only">Detalhes do cliente</DialogTitle>
           </DialogHeader>
 
           {selectedClient && (
             <>
-              {/* Cabeçalho */}
               <div className="flex items-center gap-3 mb-3">
                 <Avatar className="h-12 w-12">
                   <AvatarFallback className="text-base font-bold">
@@ -168,10 +167,10 @@ export default function ClientsPage() {
                   <span className="text-xs text-gray-500 mt-1">
                     {selectedClient.transactions.length} transações
                   </span>
+                  <span className={`font-bold py-2 ${selectedClient.balance < 0 ? "text-red-600" : "text-green-600"}`}>total: {formatValue(selectedClient.balance)}</span>
                 </div>
               </div>
 
-              {/* Conteúdo rolável */}
               <div className="overflow-y-auto max-h-[65vh] space-y-2">
 
                 {selectedClient.transactions.map((t, i) => (
@@ -179,7 +178,6 @@ export default function ClientsPage() {
                     key={i}
                     className="flex justify-between items-center bg-gray-50 rounded-lg p-3 border hover:bg-gray-100 transition"
                   >
-                    {/* Data + categoria */}
                     <div className="flex flex-col">
                       <span className="text-sm font-medium text-gray-800">
                         {new Date(t.date).toLocaleDateString()}
@@ -206,7 +204,7 @@ export default function ClientsPage() {
         </DialogContent>
       </Dialog>
 
-
+      <GoUp />
 
     </main>
   );

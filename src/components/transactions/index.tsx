@@ -17,6 +17,7 @@ import {
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { TransactionEditModal } from "../transacrtionsEditModal";
+import GoUp from "../GoUp";
 
 type SortField = "date" | "value" | "description" | "category";
 type SortDirection = "asc" | "desc";
@@ -232,6 +233,7 @@ export default function Transactions() {
         }}
       />
 
+      <GoUp />
     </section>
   );
 }

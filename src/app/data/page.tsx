@@ -80,10 +80,10 @@ export default function Data() {
 
 
     return (
-        <main className="sm:ml-14 bg-white py-10">  
+        <main className="sm:ml-14 bg-white">  
           <Header />
           <div className="flex max-w-full">
-            <div className="flex w-full justify-center mt-6">
+            <div className="flex w-full justify-center">
               <Card className="w-full max-w-xl">
 
                 <FileUpload transactions={transactionsData ?? []} setTransactions={setTransactionsData}  onSucess={handleSucess} />

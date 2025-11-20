@@ -12,6 +12,7 @@ import { TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react
 import { Tooltip } from "../ui/tooltip";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import GoUp from "../GoUp";
 
 export default function Sidebar() {
     const pathName = usePathname().slice(1);
@@ -114,10 +115,10 @@ export default function Sidebar() {
             </aside>
 
             <div className="sm:hidden flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-                <header className="sticky top-0 z-30 flex h-14 items-center px-4 border-b bg-background gap-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+                <header className="sticky top-0 z-30 flex h-14 items-center px-4 border-b gap-4 sm:static sm:h-auto sm:border-0 sm:px-6 back">
                     <Sheet open={open} onOpenChange={setOpen}>
                         <SheetTrigger asChild >
-                            <Button size="icon" variant="outline" className="sm:hidden" >
+                            <Button size="icon" variant="outline" className="sm:hidden back" >
                                 <PanelBottom className="h-5 w-5" />
                                 <span className="sr-only">Abir/fechar menu</span>
                             </Button>
@@ -170,6 +171,7 @@ export default function Sidebar() {
                     <h1 className="text-xl">Risoflora Finance</h1>
                 </header>
             </div>
+            <GoUp />
         </div>
     )
 }

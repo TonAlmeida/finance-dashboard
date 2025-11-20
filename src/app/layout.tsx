@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="min-h-dvh">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh font-robotoMono`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-dvh font-robotoMono pb-14`}
           >
           <ClientProviders>
             <Sidebar />
