@@ -28,6 +28,7 @@ export default function Data() {
   const [displayValue, setDisplayValue] = useState("");
   const router = useRouter();
   const [confirmDeletion, setConfirmDelection] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
 
     const handleSucess = () => {
       router.push("/");
@@ -267,16 +268,54 @@ export default function Data() {
             </Card>
             </div>
           </div>
+
+
           <section className="flex justify-around items-center bg-red-100 border-t-2 border-red-500 mt-4 p-4 text-red-500">
             <p>Ao apagar, esses dados não poderão ser recuperados!</p>
-            <Button 
+            <Button
               className="font-semibold border-red-500 border hover:bg-red-500 hover:text-white"
               variant="ghost"
-              onClick={() => deleteAllData()}
+              onClick={() => setOpen(true)}
             >
-                Delete all data
+              Delete all data
             </Button>
           </section>
+
+          {/* Modal */}
+          {open && (
+            <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+              <div className="bg-white rounded-md p-6 w-[90%] max-w-sm shadow-lg">
+                <h2 className="text-xl font-semibold text-red-600 mb-3">
+                  Confirmar exclusão
+                </h2>
+
+                <p className="text-gray-700 mb-6">
+                  Tem certeza que deseja apagar todos os dados? Essa ação não poderá ser desfeita.
+                </p>
+
+                <div className="flex justify-end gap-3">
+                  <Button
+                    variant="ghost"
+                    className="border border-gray-300"
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancelar
+                  </Button>
+
+                  <Button
+                    className="bg-red-600 text-white hover:bg-red-700"
+                    onClick={() => {
+                      deleteAllData();
+                      setOpen(false);
+                    }}
+                  >
+                    Apagar tudo
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+
         </main>
     )
 }
