@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatValue } from "@/utils/formatValue";
 import { TransactionData } from "@/types/TransactionData";
 import { BadgeDollarSign, DollarSign } from "lucide-react";

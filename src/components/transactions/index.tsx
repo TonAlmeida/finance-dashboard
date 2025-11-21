@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useTransitions } from "@/contexts/transactionsContext";
 import { TransactionData } from "@/types/TransactionData";
-import { Search, Filter, ArrowUp, ArrowDown, DollarSign, Pencil } from "lucide-react";
+import { Search, Filter, ArrowUp, ArrowDown, DollarSign, Pencil, TrashIcon } from "lucide-react";
 import { formatValue } from "@/utils/formatValue";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -78,6 +78,13 @@ export default function Transactions() {
     return d.toISOString().split("T")[0];
   };
 
+  const deleteTransacton = (transaction: TransactionData) => {
+    const newTransactions = transactionsData 
+    ? transactionsData.filter(t => t.id !== transaction.id) 
+    : [];
+    setTransactionsData(newTransactions);
+  }
+
   return (
     <section className="flex-1 p-4 bg-white shadow rounded-md">
       <div className="flex flex-col sm:flex-row sm:justify-between mb-4 gap-4">
@@ -138,6 +145,7 @@ export default function Transactions() {
                     </div>
                   </th>
                 ))}
+                <th></th>
                 <th className="p-2 text-right">Editar</th>
               </tr>
             </thead>
@@ -173,7 +181,18 @@ export default function Transactions() {
                     {formatValue(t.value)}
                   </td>
 
-                  <td className="p-2 text-right">
+                  <td className="p-2">
+                    <Button 
+                      size="sm"
+                      variant="ghost"
+                      className="cursor-pointer"
+                      onClick={() => deleteTransacton({...t})}
+                    >
+                      <TrashIcon />
+                    </Button>
+                  </td>
+
+                  <td className="p-2">
                     <Button
                       size="sm"
                       variant="ghost"

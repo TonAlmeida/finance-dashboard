@@ -23,7 +23,6 @@ type TransactionFormData = z.infer<typeof transactionSchema>;
 
 export default function Data() {
   const { transactionsData, setTransactionsData } = useTransitions();
-  const dashboard = generateDashboardData(transactionsData ?? []);
   const [displayValue, setDisplayValue] = useState("");
   const router = useRouter();
 
