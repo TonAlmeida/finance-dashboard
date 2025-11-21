@@ -83,6 +83,7 @@ export default function Data() {
 
       const deleteAllData = () => {
         setConfirmDelection(true);
+        setTransactionsData([]);
         setTimeout(() => {
           setConfirmDelection(false);
         }, 3000);
