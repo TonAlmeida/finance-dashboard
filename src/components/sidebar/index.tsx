@@ -55,7 +55,7 @@ export default function Sidebar() {
                                 </Link>
                             </TooltipTrigger>
                             <TooltipContent side="right" >
-                                <p className="px-3 border rounded-sm bg-white">início</p>
+                                <p className="px-3 border rounded-sm bg-white">Início</p>
                             </TooltipContent>
                         </Tooltip>
 
@@ -67,7 +67,7 @@ export default function Sidebar() {
                                 </Link>
                             </TooltipTrigger>
                             <TooltipContent side="right" >
-                                <p className="px-3 border rounded-sm bg-white">lista de trnsações</p>
+                                <p className="px-3 border rounded-sm bg-white">Lista de trnsações</p>
                             </TooltipContent>
                         </Tooltip>
 
@@ -79,7 +79,7 @@ export default function Sidebar() {
                                 </Link>
                             </TooltipTrigger>
                             <TooltipContent side="right" >
-                                <p className="px-3 border rounded-sm bg-white">contrapartes</p>
+                                <p className="px-3 border rounded-sm bg-white">Contrapartes</p>
                             </TooltipContent>
                         </Tooltip>
 
@@ -91,7 +91,7 @@ export default function Sidebar() {
                                 </Link>
                             </TooltipTrigger>
                             <TooltipContent side="right" >
-                                <p className="px-3 border rounded-sm bg-white">gerar dados</p>
+                                <p className="px-3 border rounded-sm bg-white">Gerar dados</p>
                             </TooltipContent>
                         </Tooltip>
 
@@ -107,7 +107,7 @@ export default function Sidebar() {
                                 </Link>
                             </TooltipTrigger>
                             <TooltipContent side="right" >
-                                <p className="px-3 border rounded-sm bg-white">sair</p>
+                                <p className="px-3 border rounded-sm bg-white">Sair</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
@@ -141,29 +141,29 @@ export default function Sidebar() {
 
                                 <Link onClick={sel} data-menu-id="home" href="/" className={`${selected === 'home' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
                                     <Home className="h-5 w-5 transition-all"/>
-                                    <span>início</span>
+                                    <span>Início</span>
                                 </Link>
 
                                 <Link onClick={sel} data-menu-id="transactions" href="/transactions" className={`${selected === 'transactions' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
                                     <DollarSignIcon className="h-5 w-5 transition-all"/>
-                                    <span>transações</span>
+                                    <span>Transações</span>
                                 </Link>
                         
                                 <Link onClick={sel} data-menu-id="clients" href="/clients" className={`${selected === 'clients' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
                                     <Users className="h-5 w-5 transition-all"/>
-                                    <span>contrapartes</span>
+                                    <span>Contrapartes</span>
                                 </Link>
 
                                 <Link onClick={sel} data-menu-id="data" href="/data" className={`${selected === 'data' ? 'selected' : ''} flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground`}>
                                     <DownloadIcon className="h-5 w-5 transition-all"/>
-                                    <span>gerar dados</span>
+                                    <span>Gerar dados</span>
                                 </Link>
 
                             </nav>
                             <nav className="mt-auto mb-5 grid gap-6 text-lg font-medium">
                                 <Link href='#' className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
                                     <LogOut className="h-5 w-5 transition-all text-red-500" />
-                                    <span >logout</span>
+                                    <span >Logout</span>
                                 </Link>
                             </nav>
                         </SheetContent>

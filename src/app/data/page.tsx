@@ -17,6 +17,8 @@ import { TransactionData } from "@/types/TransactionData";
 import { useTransitions } from "@/contexts/transactionsContext"
 import { expensesCategories, incomeCategories } from "@/utils/categoriesList"
 import { useRouter } from "next/navigation";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { TrashIcon } from "lucide-react";
 
 
 type TransactionFormData = z.infer<typeof transactionSchema>;
@@ -25,6 +27,7 @@ export default function Data() {
   const { transactionsData, setTransactionsData } = useTransitions();
   const [displayValue, setDisplayValue] = useState("");
   const router = useRouter();
+  const [confirmDeletion, setConfirmDelection] = useState<boolean>(false);
 
     const handleSucess = () => {
       router.push("/");
@@ -77,9 +80,28 @@ export default function Data() {
         setValue("category", "Outros");
       }, [watch("type")]);
 
+      const deleteAllData = () => {
+        setConfirmDelection(true);
+        setTimeout(() => {
+          setConfirmDelection(false);
+        }, 3000);
+      }
 
     return (
-        <main className="sm:ml-14 bg-white">  
+        <main className="sm:ml-14 bg-white relative">  
+
+          {confirmDeletion && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-lg">
+            <Alert className="bg-red-500 text-white">
+              <TrashIcon className="h-4 w-4" />
+              <AlertTitle className="text-white">Sucesso</AlertTitle>
+              <AlertDescription className="text-white">
+                Dados apagados com sucesso!
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+
           <Header />
           <div className="flex max-w-full">
             <div className="flex w-full justify-center">
@@ -243,10 +265,18 @@ export default function Data() {
                 </form>
               </CardContent>
             </Card>
-
             </div>
-
           </div>
+          <section className="flex justify-around items-center bg-red-100 border-t-2 border-red-500 mt-4 p-4 text-red-500">
+            <p>Ao apagar, esses dados não poderão ser recuperados!</p>
+            <Button 
+              className="font-semibold border-red-500 border hover:bg-red-500 hover:text-white"
+              variant="ghost"
+              onClick={() => deleteAllData()}
+            >
+                Delete all data
+            </Button>
+          </section>
         </main>
     )
 }

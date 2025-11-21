@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useTransitions } from "@/contexts/transactionsContext";
 import { TransactionData } from "@/types/TransactionData";
-import { Search, Filter, ArrowUp, ArrowDown, DollarSign, Pencil, TrashIcon } from "lucide-react";
+import { Search, Filter, ArrowUp, ArrowDown, DollarSign, Pencil, TrashIcon, Info } from "lucide-react";
 import { formatValue } from "@/utils/formatValue";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { TransactionEditModal } from "../transacrtionsEditModal";
 import GoUp from "../GoUp";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 type SortField = "date" | "value" | "description" | "category";
 type SortDirection = "asc" | "desc";
@@ -29,6 +30,7 @@ export default function Transactions() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState<SortField>("date");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const [confirmDeletion, setConfirmDeletion] = useState<boolean>(false);
 
   const transactions = transactionsData ?? [];
 
@@ -64,29 +66,37 @@ export default function Transactions() {
     );
   };
 
-  const handleSave = () => {
-    if (!editing) return;
-    setTransactionsData((prev) =>
-      (prev ?? []).map((t) => (t.id === editing.id ? editing : t))
-    );
-    setEditing(null);
-  };
-
-  const formatDateInput = (date: Date | string) => {
-    if (!date) return "";
-    const d = typeof date === "string" ? new Date(date) : date;
-    return d.toISOString().split("T")[0];
-  };
-
   const deleteTransacton = (transaction: TransactionData) => {
+    setConfirmDeletion(true);
+
     const newTransactions = transactionsData 
     ? transactionsData.filter(t => t.id !== transaction.id) 
-    : [];
+    : []; // this is just for convention
     setTransactionsData(newTransactions);
+    console.log('delection here')
+
+    setTimeout(() => {
+      setConfirmDeletion(false);
+    }, 3000);
   }
 
   return (
-    <section className="flex-1 p-4 bg-white shadow rounded-md">
+    <section className="flex-1 p-4 bg-white shadow rounded-md relative">
+
+        {confirmDeletion && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-lg">
+            <Alert className="bg-red-100">
+              <TrashIcon className="h-4 w-4" />
+              <AlertTitle>Sucesso</AlertTitle>
+              <AlertDescription>
+                Transação apagada com sucesso!
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+
+
+
       <div className="flex flex-col sm:flex-row sm:justify-between mb-4 gap-4">
         <div className="flex items-center gap-2">
           <Filter size={18} />
@@ -229,13 +239,23 @@ export default function Transactions() {
               </span>
             </div>
 
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => setEditing({ ...t })}
-            >
-              <Pencil size={16} />
-            </Button>
+            <div id="buttonsDiv" className="flex justify-end items-center">
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => deleteTransacton({ ...t })}
+              >
+                <TrashIcon />
+              </Button>
+
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => setEditing({ ...t })}
+              >
+                <Pencil size={16} />
+              </Button>
+            </div>
           </div>
         ))}
       </div>

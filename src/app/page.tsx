@@ -18,6 +18,7 @@ import {
 import { Header } from "@/components/header";
 import { useTransitions } from "@/contexts/transactionsContext";
 import { generateBarChartData, generatePizzaChartData } from "@/utils/chartDataGenerator"
+import Link from "next/link";
 
 export default function App() {
   const { transactionsData, setTransactionsData } = useTransitions();
@@ -127,7 +128,11 @@ export default function App() {
     <main className="ml-0 sm:ml-14">
     <Header />
     <div className="flex flex-col justify-center items-center h-96">
-      <h1 className="text-center">Abra o menu na opção Gerar dados <br/> para adicionar :)</h1>
+      <h1 className="text-center">
+        Abra o menu na opção Gerar dados <br/> 
+        para adicionar :) <br/> 
+        <Link href="/data" className="m-4 underline text-blue-400">ir para página de dados</Link>
+      </h1>
     </div>
     </main>
   )
