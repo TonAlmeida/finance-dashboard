@@ -13,7 +13,7 @@ interface FileUploadProps {
 export default function FileUpload({ transactions, setTransactions, onSucess }: FileUploadProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [debugMode, setDebugMode] = useState(false);
+  const [debugMode] = useState(false);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;

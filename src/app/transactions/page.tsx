@@ -6,8 +6,8 @@ import { useTransitions } from "@/contexts/transactionsContext";
 import { useEffect, useState } from "react";
 
 export default function Orders() {
-    const { transactionsData, setTransactionsData } = useTransitions();
-    const [error, setError] = useState<string>('');
+    const { transactionsData } = useTransitions();
+    const [error] = useState<string>('');
 
       useEffect(() => {
         console.log(error)

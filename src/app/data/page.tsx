@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import React, { useEffect, useState } from "react";
 import { Header } from "@/components/header";
-import { formatInputValue, generateDashboardData } from "@/utils/formatValue";
+import { formatInputValue } from "@/utils/formatValue";
 import { transactionSchema } from "@/utils/transactionSchema";
 import FileUpload from "@/components/FileUpload";
 import { TransactionData } from "@/types/TransactionData";
@@ -77,9 +77,13 @@ export default function Data() {
         },
       });
 
+      const typeValue = watch("type");
+
       useEffect(() => {
         setValue("category", "Outros");
-      }, [watch("type")]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [typeValue]);
+
 
       const deleteAllData = () => {
         setConfirmDelection(true);

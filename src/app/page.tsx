@@ -21,15 +21,15 @@ import { generateBarChartData, generatePizzaChartData } from "@/utils/chartDataG
 import Link from "next/link";
 
 export default function App() {
-  const { transactionsData, setTransactionsData } = useTransitions();
+  const { transactionsData } = useTransitions();
   const [showAlert, setShowAlert ] = useState<boolean>(false);
   const dashboard = generateDashboardData(transactionsData ?? []);
   const barChartData = generateBarChartData(transactionsData ?? []);
   const pizzaChartData = generatePizzaChartData(transactionsData ?? []);
 
   useEffect(() => {
-    transactionsData && setShowAlert(true);
-  }, []);
+    if(transactionsData) setShowAlert(true);
+  }, [transactionsData]);
 
   return (dashboard && transactionsData && transactionsData?.length > 0) ? (
     <main className="sm:ml-14 p-4 bg-white text-[#6B6A3A] overflow-x-hidden">

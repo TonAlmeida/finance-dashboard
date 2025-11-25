@@ -6,12 +6,14 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { TransactionData } from "@/types/TransactionData";
+
 
 interface TransactionEditModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (updated: any) => void; // depois você pode tipar com TransactionData
-  transaction: any; // você pode substituir por TransactionData | null
+  onSave: (updated: TransactionData) => void;
+  transaction: TransactionData | null;
   categories: string[];
 }
 
@@ -26,7 +28,7 @@ export function TransactionEditModal({ open, onClose, onSave, transaction, categ
   useEffect(() => {
     if (!transaction) return;
 
-    setDate(transaction.date.split("T")[0]);
+    setDate(transaction.date.toISOString().split("T")[0]);
     setDesc(transaction.description);
     setCategory(transaction.category);
     setValue(String(Math.abs(transaction.value)));
@@ -38,13 +40,18 @@ export function TransactionEditModal({ open, onClose, onSave, transaction, categ
     ? JSON.parse(value) 
     : JSON.parse("-" + value);
 
-    onSave({
-      ...transaction,
-      date,
+   onSave({
+      id: transaction?.id ?? crypto.randomUUID(),
+      date: new Date(date),
       description: desc,
       category,
+      type,
       value: +finalValue,
+      counterpartName: transaction?.counterpartName ?? "",
+      counterpartDocument: transaction?.counterpartDocument ?? "",
     });
+
+
 
     onClose();
   };
