@@ -50,7 +50,7 @@ import { PizzaChartData } from "@/types/pizzaChartData";
     });
 
     return result;
-}
+    }
 
 
     export function generatePizzaChartData(transactions: TransactionData[]): PizzaChartData[] {

@@ -91,7 +91,7 @@ export function TransactionEditModal({ open, onClose, onSave, transaction, categ
             </Select>
           </div>
 
-          <div>
+          <div className="flex flex-col justify-center items-center md:flex-row md:justify-around">
             <Label>Tipo</Label>
             <Select value={type} onValueChange={(value: "positive" | "negative") => setType(value)}>
                 <SelectTrigger>
