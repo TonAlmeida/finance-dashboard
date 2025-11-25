@@ -3,35 +3,55 @@ import { TransactionData } from "@/types/TransactionData";
 import { PizzaChartData } from "@/types/pizzaChartData";
 
     export function generateBarChartData(transactions: TransactionData[]): BarChartData[] {
-        const months = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+    const months = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
 
-        const summary = new Map<number, { income: number; expenses: number }>();
+    // Map onde a chave é "ANO-MÊS"
+    const summary = new Map<string, { income: number; expenses: number }>();
 
-        for (const t of transactions) {
-            const date = t.date instanceof Date ? t.date : new Date(t.date);
-            const monthIndex = date.getMonth();
+    for (const t of transactions) {
+        const date = t.date instanceof Date ? t.date : new Date(t.date);
 
-            if (!summary.has(monthIndex)) {
-                summary.set(monthIndex, { income: 0, expenses: 0 });
-            }
+        const year = date.getFullYear();
+        const monthIndex = date.getMonth();
 
-            const current = summary.get(monthIndex)!;
+        const key = `${year}-${monthIndex}`; // ex: "2024-10"
 
-            // Considera valores positivos como entrada e negativos como saída
-            if (t.value >= 0) {
-                current.income += t.value;
-            } else {
-                current.expenses += Math.abs(t.value);
-            }
+        if (!summary.has(key)) {
+            summary.set(key, { income: 0, expenses: 0 });
         }
 
-        // Transforma o Map em um array organizado
-        return Array.from(summary.entries()).map(([monthIndex, { income, expenses }]) => ({
-            month: months[monthIndex],
-            income: +income.toFixed(2),
-            expenses: +expenses.toFixed(2),
-        }));
+        const current = summary.get(key)!;
+
+        if (t.value >= 0) {
+            current.income += t.value;
+        } else {
+            current.expenses += Math.abs(t.value);
+        }
     }
+
+    // Transforma o Map em um array para o gráfico
+    const result: BarChartData[] = [...summary.entries()].map(([key, data]) => {
+        const [yearStr, monthStr] = key.split("-");
+        const monthIndex = Number(monthStr);
+
+        return {
+            label: `${months[monthIndex]}/${yearStr}`,
+            income: data.income,
+            expenses: data.expenses,
+            month: monthIndex,
+            year: Number(yearStr)
+        };
+    });
+
+    // Ordena por ano e mês (opcional, mas recomendado)
+    result.sort((a, b) => {
+        if (a.year !== b.year) return a.year - b.year;
+        return a.month - b.month;
+    });
+
+    return result;
+}
+
 
     export function generatePizzaChartData(transactions: TransactionData[]): PizzaChartData[] {
         const grup = transactions.reduce((acc, transaction) => {
