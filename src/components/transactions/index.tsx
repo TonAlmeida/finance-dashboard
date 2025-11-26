@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { TransactionEditModal } from "../transacrtionsEditModal";
 import GoUp from "../GoUp";

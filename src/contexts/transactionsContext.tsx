@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { TransactionData } from '@/types/TransactionData';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { TransactionData } from "@/types/TransactionData";
 
 type TransactionsContextType = {
   transactionsData: TransactionData[] | null;
@@ -11,15 +11,30 @@ type TransactionsContextType = {
 const TransactionsDataContext = createContext<TransactionsContextType | undefined>(undefined);
 
 export const TransactionDataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+
   const [transactionsData, setTransactionsData] = useState<TransactionData[] | null>(null);
 
+  // Convert string dates to real Date objects
+  const normalizeTransactions = (data: any[]): TransactionData[] => {
+    return data.map((t) => ({
+      ...t,
+      date: t.date instanceof Date ? t.date : new Date(t.date), // <<< aqui é a cura
+    }));
+  };
+
   useEffect(() => {
-    const savedTransactions = JSON.parse(localStorage.getItem("transactions") || "[]");
-    setTransactionsData(savedTransactions);
+    const saved = JSON.parse(localStorage.getItem("transactions") || "[]");
+
+    // Garantir que todas as datas sejam Date
+    const normalized = normalizeTransactions(saved);
+
+    setTransactionsData(normalized);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("transactions", JSON.stringify(transactionsData))
+    if (transactionsData) {
+      localStorage.setItem("transactions", JSON.stringify(transactionsData));
+    }
   }, [transactionsData]);
 
   return (
@@ -32,7 +47,7 @@ export const TransactionDataProvider: React.FC<{ children: React.ReactNode }> = 
 export function useTransitions() {
   const context = useContext(TransactionsDataContext);
   if (!context) {
-    throw new Error('useTransitions deve ser usado dentro de um TransactionDataProvider');
+    throw new Error("useTransitions deve ser usado dentro de um TransactionDataProvider");
   }
   return context;
 }

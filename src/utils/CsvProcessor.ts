@@ -1,8 +1,14 @@
 import { TransactionData } from "@/types/TransactionData";
-import { expensesCategories, incomeCategories } from "@/utils/categoriesList";
+import { NuMappingData } from "./NuMappingData";
+import { BBMappingData } from "./BbMappingData";
+
+type Params = {
+    files: File[],
+    bank: string,
+}
  
 export class CsvProcessor {
-    static processData (files: File[]): Promise<TransactionData[]> {
+    static async processData ({files, bank}: Params): Promise<TransactionData[]> {
         return new Promise (async (resolve, reject) => {
             try {
                 if(!files || files.length === 0) {
@@ -14,9 +20,24 @@ export class CsvProcessor {
                 for(const file of files) {
                     const fileData = await this.readFile(file);
                     const processedData = this.parseContent(fileData);
-                    const transactions = this.mappingData(processedData);
+                    let transactions: TransactionData[] = [];
 
-                    allTransactions.push(...transactions);
+                    switch(bank) {
+                        case 'nu':
+                            transactions = NuMappingData(processedData);
+                            break;
+                        case 'bb':
+                            transactions = BBMappingData(processedData);
+                            break;
+                        case 'bradesco':
+                            console.log("banco do bradesco selecionado")
+                            break;
+                        default:
+                            console.log("error trying make mapping on data");
+                            break;
+                    }
+
+                    if(transactions) allTransactions.push(...transactions);
                 }
 
                 if(allTransactions) {
@@ -58,58 +79,7 @@ export class CsvProcessor {
         return result;
     }
 
-    private static mappingData(data: Record<string, string>[]): TransactionData[] {
-    return data
-        .filter(d => d["Data"])
-        .map(d => {
-            const normalized = Object.fromEntries(
-                Object.entries(d).map(([key, value]) => [key.toLowerCase(), value])
-            );
-
-            const [day, month, year] = normalized["data"].split("/").map(Number);
-            const [type, counterpartName, counterpartDocument] =
-                normalized["descrição"].trim().split("-").map(item => item.trim());
-
-
-            function detectCategory(description: string, categories: Record<string, string[]>): string {
-                const normalizedDesc = description.toLowerCase();
-
-                for (const [category, keywords] of Object.entries(categories)) {
-                    for (const keyword of keywords) {
-                        if (normalizedDesc.includes(keyword.toLowerCase())) {
-                            return category;
-                        }
-                    }
-                }
-
-                return "Outros";
-            }
-
-        
-            function generateCategory() {
-                if (+normalized["valor"] > 0) {
-                    return detectCategory(normalized["descrição"], incomeCategories);
-                } else {
-                    return detectCategory(normalized["descrição"], expensesCategories);
-                }
-            }
-
-            const category = generateCategory();
-
-            return {
-                date: new Date(year, month - 1, day),
-                value: +normalized["valor"],
-                id: normalized["identificador"],
-                description: normalized["descrição"],
-                category,
-                numberOfTransactions: data.length,
-
-                type,
-                counterpartName,
-                counterpartDocument,
-            };
-        });
-}
+    
 
 
 }

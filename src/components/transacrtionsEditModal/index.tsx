@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { TransactionData } from "@/types/TransactionData";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 
 interface TransactionEditModalProps {
@@ -63,6 +64,10 @@ export function TransactionEditModal({ open, onClose, onSave, transaction, categ
           <DialogTitle>Editar Transação</DialogTitle>
         </DialogHeader>
 
+        <DialogDescription className="sr-only">
+          modal para edição de transações
+        </DialogDescription>
+
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
           
           <div>
@@ -70,39 +75,41 @@ export function TransactionEditModal({ open, onClose, onSave, transaction, categ
             <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           </div>
 
-          <div className="col-span-2">
-            <Label>Descrição</Label>
-            <Input value={desc} onChange={(e) => setDesc(e.target.value)} />
-          </div>
+            <div className="col-span-2">
+              <Label>Descrição</Label>
+              <Input value={desc} onChange={(e) => setDesc(e.target.value)} />
+            </div>
 
-          <div>
-            <Label>Categoria</Label>
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger>
-                <SelectValue placeholder="Categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((c) => (
-                  <SelectItem key={c} value={c}>
-                    {c}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex flex-col justify-center items-center md:flex-row md:justify-around">
-            <Label>Tipo</Label>
-            <Select value={type} onValueChange={(value: "positive" | "negative") => setType(value)}>
+          <div className="flex flex-col justify-start sm:flex-row col-span-2">
+            <div className="mr-10">
+              <Label>Categoria</Label>
+              <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger>
-                    <SelectValue placeholder="Tipo" />
+                  <SelectValue placeholder="Categoria" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="positive">Receita</SelectItem>
-                    <SelectItem value="negative">Despesa</SelectItem>
+                  {categories.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
-            </Select>
+              </Select>
+            </div>
+            <div>
+              <Label>Tipo</Label>
+              <Select value={type} onValueChange={(value: "positive" | "negative") => setType(value)}>
+                  <SelectTrigger>
+                      <SelectValue placeholder="Tipo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                      <SelectItem value="positive">Receita</SelectItem>
+                      <SelectItem value="negative">Despesa</SelectItem>
+                  </SelectContent>
+              </Select>
+            </div>
           </div>
+
 
           <div className="col-span-2">
             <Label>Valor</Label>

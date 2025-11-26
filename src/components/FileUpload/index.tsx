@@ -3,6 +3,15 @@
 import React, { useRef, useState } from "react";
 import { CsvProcessor } from "@/utils/CsvProcessor";
 import { TransactionData } from "@/types/TransactionData";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface FileUploadProps {
   transactions: TransactionData[];
@@ -12,21 +21,23 @@ interface FileUploadProps {
 
 export default function FileUpload({ transactions, setTransactions, onSucess }: FileUploadProps) {
   const [isProcessing, setIsProcessing] = useState(false);
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const [debugMode] = useState(false);
+  const [bank, setBank] = useState<"bb" | "nu" | "bradesco">("nu");
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    console.log("[FileUpload] onChange files:", files);
     if (!files || files.length === 0) return;
 
     setIsProcessing(true);
 
     try {
       const fileArray = Array.from(files);
-      console.log("[FileUpload] selected file names:", fileArray.map(f => f.name));
 
-      const transactionsFromCsv = await CsvProcessor.processData(fileArray);
+      const transactionsFromCsv = await CsvProcessor.processData({
+        files: fileArray,
+        bank: bank
+      });
 
       const transactionsSetIDs = new Set(transactions.map((i) => i.id));
       const newItems = transactionsFromCsv.filter((item) => !transactionsSetIDs.has(item.id));
@@ -55,6 +66,20 @@ export default function FileUpload({ transactions, setTransactions, onSucess }: 
   return (
     <div className="flex justify-around items-center border-b-2 border-green-500 mb-4 py-4">
       <h3 className="hidden sm:block">Importar arquivos CSVs</h3>
+
+      <Select value={bank} onValueChange={(v: "bb" | "nu" | "bradesco") => setBank(v)}>
+        <SelectTrigger className="w-[160px]">
+          <SelectValue placeholder="Selecione um Banco" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Bancos</SelectLabel>
+            <SelectItem value="nu">Nubank</SelectItem>
+            <SelectItem value="bb">Bando do Brasil</SelectItem>
+            <SelectItem value="bradesco">Bradesco</SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
 
       <button
         type="button"

@@ -8,6 +8,7 @@ import { TransactionData } from "@/types/TransactionData";
 import { BadgeDollarSign, DollarSign } from "lucide-react";
 import { useTransitions } from "@/contexts/transactionsContext";
 import GoUp from "@/components/GoUp"
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 type ClientGroup = {
   document: string;
@@ -127,9 +128,9 @@ export default function ClientsPage() {
                     <AvatarFallback>{c.name.slice(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </td>
-                <td className=" px-4 py-2 font-medium truncate w-full max-w-35 sm:max-w-90 text-xs sm:text-sm">{c.name}</td>
-                <td className=" px-4 py-2 text-right font-semibold w-0.5">{c.transactions.length}</td>
-                <td className={` px-4 py-2 text-right font-semibold ${c.balance >= 0 ? "text-green-600" : "text-red-600"}`}>
+                <td className="pl-2 font-medium truncate max-w-25 sm:max-w-90 text-xs sm:text-sm">{c.name}</td>
+                <td className="text-right font-semibold w-0.5">{c.transactions.length}</td>
+                <td className={`px-2 py-2 text-right font-semibold w-full ${c.balance >= 0 ? "text-green-600" : "text-red-600"}`}>
                   {formatValue(c.balance)}
                 </td>
               </tr>
@@ -151,6 +152,10 @@ export default function ClientsPage() {
           <DialogHeader>
             <DialogTitle className="sr-only">Detalhes do cliente</DialogTitle>
           </DialogHeader>
+
+          <DialogDescription className="sr-only">
+            resumo de transações por parte
+          </DialogDescription>
 
           {selectedClient && (
             <>
